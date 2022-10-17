@@ -29,6 +29,7 @@ const Accuracy: NextPage = () => {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
               color: "purple",
+              accuracy: position.coords.accuracy,
             })
           );
         },

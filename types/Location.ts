@@ -1,3 +1,5 @@
+import { Maybe } from "./generic";
+
 export interface GeoLocation {
   lat: number;
   lng: number;
@@ -21,4 +23,5 @@ export interface LocationPin {
   lat: number;
   lng: number;
   color: string;
+  accuracy: Maybe<number>;
 }

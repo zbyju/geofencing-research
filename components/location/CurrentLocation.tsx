@@ -22,9 +22,9 @@ interface Props {
 const CurrentLocation = ({ location }: Props) => {
   return (
     <>
-      <Heading>Current location</Heading>
       {location ? (
         <Flex
+          my={3}
           px={5}
           py={2}
           direction="row"
