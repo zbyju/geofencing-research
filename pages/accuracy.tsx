@@ -8,7 +8,8 @@ import { Maybe } from "../types/generic";
 import { GeoLocationMeasured3D } from "../types/location";
 
 const Accuracy: NextPage = () => {
-  const [location, setLocation] = useState<Maybe<GeoLocationMeasured3D>>(null);
+  const [location, setLocation] =
+    useState<Maybe<GeoLocationMeasured3D>>(undefined);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
