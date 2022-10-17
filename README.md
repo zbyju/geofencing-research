@@ -33,5 +33,5 @@ yarn dev
 
 Others:
 
-- [react-google-maps](https://www.npmjs.com/package/react-google-maps)
+- [react-google-maps](https://www.npmjs.com/package/google-map-react)
 - [react-error-boundary](https://www.npmjs.com/package/react-error-boundary?activeTab=dependencies)
