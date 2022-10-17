@@ -6,11 +6,13 @@ import AccuracyStatistics from "../components/statistics/AccuracyStatistics";
 
 const Accuracy: NextPage = () => {
   return (
-    <Box w="100%" py={5}>
+    <Box w="100%">
       <Flex direction="column">
         <Map />
-        <CurrentLocation />
-        <AccuracyStatistics />
+        <Box px={10}>
+          <CurrentLocation />
+          <AccuracyStatistics />
+        </Box>
       </Flex>
     </Box>
   );
