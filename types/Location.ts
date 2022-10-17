@@ -16,3 +16,9 @@ export interface GeoLocationMeasured3D
     GeoLocationMeasured {
   accuracyAlt: number | null;
 }
+
+export interface LocationPin {
+  lat: number;
+  lng: number;
+  color: string;
+}

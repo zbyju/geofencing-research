@@ -1,24 +1,28 @@
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import { Box, Heading } from "@chakra-ui/react";
 import GoogleMapReact from "google-map-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import config from "../../config.json";
-import { GeoLocation } from "../../types/location";
+import { GeoLocation, LocationPin } from "../../types/location";
 
 interface AnyProps {
   text: string;
 }
 
-const Marker = ({ lat, lng }: any) => (
-  <TriangleDownIcon color="red" ml="-20px" mt="-40px" boxSize="10" />
+const Marker = ({ lat, lng, color }: any) => (
+  <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
 );
 
 const MapErrorFallback = () => {
   return <Heading>There has been an error, when loading the map.</Heading>;
 };
 
-const Map = () => {
+interface Props {
+  pins: LocationPin[];
+}
+
+const Map = ({ pins }: Props) => {
   const [map, setMap] = useState<any | null>(null);
   const defaultProps = {
     center: {
@@ -33,6 +37,12 @@ const Map = () => {
     map.setCenter(location);
   };
 
+  useEffect(() => {
+    if (pins.length > 0) {
+      changeCenter(pins[0]);
+    }
+  }, [pins]);
+
   return (
     <>
       <ErrorBoundary FallbackComponent={MapErrorFallback}>
@@ -46,7 +56,9 @@ const Map = () => {
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => apiIsLoaded(map, maps)}
           >
-            <Marker lat={60.172059} lng={24.945831} />
+            {pins.map((p) => (
+              <Marker key={p.lat.toString() + p.lng.toString()} {...p} />
+            ))}
           </GoogleMapReact>
         </Box>
       </ErrorBoundary>
