@@ -4,7 +4,7 @@ import GoogleMapReact from "google-map-react";
 import { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import config from "../../config.json";
-import { GeoLocation } from "../../types/Location";
+import { GeoLocation } from "../../types/location";
 
 interface AnyProps {
   text: string;
