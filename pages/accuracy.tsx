@@ -35,7 +35,8 @@ const Accuracy: NextPage = () => {
         },
         (error) => {
           alert(error.message);
-        }
+        },
+        { maximumAge: 10000, timeout: 5000, enableHighAccuracy: true }
       );
     } else {
       console.log("Geo not available");
