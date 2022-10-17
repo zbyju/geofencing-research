@@ -1,7 +1,7 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { ChakraProvider } from '@chakra-ui/react'
-import Nav from '../components/nav'
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
+import Nav from "../components/TheNav";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Nav />
       <Component {...pageProps} />
     </ChakraProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
