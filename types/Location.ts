@@ -4,7 +4,7 @@ export interface GeoLocation {
 }
 
 export interface GeoLocation3D extends GeoLocation {
-  altitude: number | null;
+  alt: number | null;
 }
 
 export interface GeoLocationMeasured extends GeoLocation {
@@ -14,5 +14,5 @@ export interface GeoLocationMeasured extends GeoLocation {
 export interface GeoLocationMeasured3D
   extends GeoLocation3D,
     GeoLocationMeasured {
-  accuracyAltitude: number | null;
+  accuracyAlt: number | null;
 }

@@ -13,16 +13,21 @@ const Accuracy: NextPage = () => {
 
   useEffect(() => {
     if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        console.log(position);
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          altitude: position.coords.altitude,
-          accuracyAltitude: position.coords.altitudeAccuracy,
-        });
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position);
+          setLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            alt: position.coords.altitude,
+            accuracy: position.coords.accuracy,
+            accuracyAlt: position.coords.altitudeAccuracy,
+          });
+        },
+        (error) => {
+          alert(error.message);
+        }
+      );
     } else {
       console.log("Geo not available");
     }
