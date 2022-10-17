@@ -2,6 +2,7 @@ import { TriangleDownIcon } from "@chakra-ui/icons";
 import { Box, Heading } from "@chakra-ui/react";
 import GoogleMapReact from "google-map-react";
 import { ErrorBoundary } from "react-error-boundary";
+import config from "../../config.json";
 
 interface AnyProps {
   text: string;
@@ -29,7 +30,7 @@ const Map = () => {
         <Box w="100%" h="40vh" shadow="md">
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: "",
+              key: config.GOOGLE_MAPS_API_KEY,
             }}
             defaultCenter={defaultProps.center}
             defaultZoom={defaultProps.zoom}

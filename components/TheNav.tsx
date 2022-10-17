@@ -18,8 +18,6 @@ const Nav = () => {
     },
   ];
 
-  console.log(links);
-
   return (
     <Box w="100vw" h="50px" shadow="md">
       <Flex h="100%" px={5} justify="space-between">
