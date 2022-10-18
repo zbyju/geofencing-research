@@ -3,7 +3,6 @@ import { Box, Heading } from "@chakra-ui/react";
 import GoogleMapReact from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import config from "../../config.json";
 import type { GeoLocation, LocationPin } from "../../types/location";
 
 interface AnyProps {
@@ -69,13 +68,15 @@ const Map = ({ pins }: Props) => {
     }
   }, [pins, googleMaps]);
 
+  console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+
   return (
     <>
       <ErrorBoundary FallbackComponent={MapErrorFallback}>
         <Box w="100%" h="40vh" shadow="md">
           <GoogleMapReact
             bootstrapURLKeys={{
-              key: config.GOOGLE_MAPS_API_KEY,
+              key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
             }}
             defaultCenter={defaultProps.center}
             defaultZoom={defaultProps.zoom}
