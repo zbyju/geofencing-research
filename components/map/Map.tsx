@@ -5,10 +5,6 @@ import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import type { GeoLocation, LocationPin } from "../../types/location";
 
-interface AnyProps {
-  text: string;
-}
-
 const Marker = ({ lat, lng, color }: any) => (
   <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
 );
@@ -39,7 +35,6 @@ const Map = ({ pins }: Props) => {
   };
   const changeCenter = (location: GeoLocation) => {
     if (googleMaps.map === undefined) return;
-    console.log(googleMaps.map);
     googleMaps.map.setCenter(location);
   };
 
@@ -67,8 +62,6 @@ const Map = ({ pins }: Props) => {
       changeCenter(pins[0]);
     }
   }, [pins, googleMaps]);
-
-  console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
   return (
     <>

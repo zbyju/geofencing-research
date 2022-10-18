@@ -29,8 +29,10 @@ const CurrentLocation = ({ location }: Props) => {
           py={2}
           direction="row"
           justify="space-between"
-          w="100%"
           align="center"
+          wrap="wrap"
+          overflowX="scroll"
+          w="100%"
           shadow="md"
           gap="10px"
         >
