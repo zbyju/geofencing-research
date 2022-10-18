@@ -1,4 +1,4 @@
-import { Maybe } from "./generic";
+import type { Maybe } from "./generic";
 
 export interface GeoLocation {
   lat: number;

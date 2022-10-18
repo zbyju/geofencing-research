@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import CurrentLocation from "../components/location/CurrentLocation";
 import Map from "../components/map/Map";
 import AccuracyStatistics from "../components/statistics/AccuracyStatistics";
-import { Maybe } from "../types/generic";
-import { GeoLocationMeasured3D, LocationPin } from "../types/location";
+import type { Maybe } from "../types/generic";
+import type { GeoLocationMeasured3D, LocationPin } from "../types/location";
 
 const Accuracy: NextPage = () => {
   const [location, setLocation] =

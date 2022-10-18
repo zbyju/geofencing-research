@@ -13,7 +13,7 @@ import {
   Center,
   Flex,
 } from "@chakra-ui/react";
-import { GeoLocationMeasured3D } from "../../types/location";
+import type { GeoLocationMeasured3D } from "../../types/location";
 
 interface Props {
   location?: GeoLocationMeasured3D;
