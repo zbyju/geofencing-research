@@ -1,5 +1,13 @@
-import { TriangleDownIcon } from "@chakra-ui/icons";
-import { Box, Heading } from "@chakra-ui/react";
+import { TriangleDownIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Flex,
+  FormLabel,
+  Heading,
+  Icon,
+  Switch,
+} from "@chakra-ui/react";
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -37,6 +45,9 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
     map: undefined,
     maps: undefined,
   });
+  const [shouldChangeCenter, setShouldChangeCenter] = useState<boolean>(true);
+  const [shouldShowMarkers, setShouldShowMarkers] = useState<boolean>(true);
+
   const defaultProps = {
     center: {
       lat: 60.172059,
@@ -47,6 +58,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
   const apiIsLoaded = (map: any, maps: any) => {
     setGoogleMaps({ map, maps });
   };
+
   const changeCenter = (location: GeoLocation) => {
     if (googleMaps.map === undefined) return;
     googleMaps.map.setCenter(location);
@@ -54,6 +66,9 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
 
   useEffect(() => {
     if (googleMaps.map && googleMaps.maps && userLocation) {
+      if (shouldChangeCenter && userLocation !== undefined) {
+        changeCenter(userLocation);
+      }
       if (userMarker?.accuracyCircle !== undefined)
         userMarker.accuracyCircle.setMap(null);
       setUserMarker({
@@ -95,7 +110,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
   return (
     <>
       <ErrorBoundary FallbackComponent={MapErrorFallback}>
-        <Box w="100%" h="40vh" shadow="md">
+        <Box w="100%" h="40vh">
           <GoogleMapReact
             bootstrapURLKeys={{
               key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
@@ -106,14 +121,14 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
             onGoogleApiLoaded={({ map, maps }) => apiIsLoaded(map, maps)}
             onClick={handleClick}
           >
-            {userMarker?.pin !== undefined && (
+            {shouldShowMarkers && userMarker?.pin !== undefined && (
               <Marker
                 lat={userMarker.pin.lat}
                 lng={userMarker.pin.lng}
                 color={userMarker.pin.color}
               />
             )}
-            {manualMarker?.pin !== undefined && (
+            {shouldShowMarkers && manualMarker?.pin !== undefined && (
               <Marker
                 lat={manualMarker.pin.lat}
                 lng={manualMarker.pin.lng}
@@ -122,6 +137,25 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
             )}
           </GoogleMapReact>
         </Box>
+        <Flex px={3} py={1} direction="row" wrap="wrap" shadow="md">
+          <Button
+            size="sm"
+            onClick={() => setShouldShowMarkers(!shouldShowMarkers)}
+            leftIcon={<Icon as={shouldShowMarkers ? ViewOffIcon : ViewIcon} />}
+          >
+            {shouldShowMarkers ? "Hide markers" : "Show markers"}
+          </Button>
+
+          <FormLabel htmlFor="email-alerts" mb="0" alignSelf="center" ml={3}>
+            Recenter on change?
+          </FormLabel>
+          <Switch
+            id="email-alerts"
+            alignSelf="center"
+            isChecked={shouldChangeCenter}
+            onChange={(e) => setShouldChangeCenter(!shouldChangeCenter)}
+          />
+        </Flex>
       </ErrorBoundary>
     </>
   );
