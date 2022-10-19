@@ -80,12 +80,12 @@ const AccuracyStatistics = ({ userLocation, manualLocation }: Props) => {
   function makeErrorStatElement(s: StatsError | undefined, text: string) {
     if (s === undefined)
       return (
-        <Stat>
+        <Stat key={text}>
           {text} error<StatNumber>Unknown</StatNumber>
         </Stat>
       );
     return (
-      <Stat>
+      <Stat key={text}>
         <StatLabel>{text} error</StatLabel>
         <StatNumber>{s.absolute}</StatNumber>
         <StatHelpText>
@@ -99,13 +99,13 @@ const AccuracyStatistics = ({ userLocation, manualLocation }: Props) => {
   function makeDistanceStatElement(d: number | undefined, text: string) {
     if (d === undefined)
       return (
-        <Stat>
+        <Stat key={text}>
           {text}
           <StatNumber>Unknown</StatNumber>
         </Stat>
       );
     return (
-      <Stat>
+      <Stat key={text}>
         <StatLabel>{text}</StatLabel>
         <StatNumber>{d.toFixed(3)}m</StatNumber>
       </Stat>

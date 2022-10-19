@@ -25,7 +25,6 @@ const ManualLocation = ({ location, onChange }: Props) => {
   const [lng, setLng] = useState<Maybe<number>>(location?.lng || undefined);
   const [alt, setAlt] = useState<Maybe<number>>(location?.alt || undefined);
 
-  console.log(location);
   useEffect(() => {
     if (location === undefined) return;
     if (location.lat !== undefined) setLat(location.lat);
