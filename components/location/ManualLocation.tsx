@@ -1,6 +1,8 @@
 import {
   Flex,
+  Heading,
   Input,
+  InputRightAddon,
   NumberInput,
   NumberInputField,
   Stat,
@@ -24,7 +26,6 @@ const ManualLocation = ({ location, onChange }: Props) => {
 
   console.log(location);
   useEffect(() => {
-    console.log(location);
     if (location === undefined) return;
     if (location.lat !== undefined) setLat(location.lat);
     if (location.lng !== undefined) setLng(location.lng);
@@ -46,6 +47,7 @@ const ManualLocation = ({ location, onChange }: Props) => {
         shadow="md"
         gap="10px"
       >
+        <Heading size="sm">Manual location:</Heading>
         <NumberInput value={lat} onChange={(s) => setLat(Number(s))}>
           <NumberInputField placeholder="Latitude" w="auto" />
         </NumberInput>

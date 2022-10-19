@@ -11,7 +11,6 @@ import type {
   GeoLocation3D,
   GeoLocationMeasured3D,
   LocationPin,
-  LocationPins,
 } from "../types/location";
 
 const Accuracy: NextPage = () => {
@@ -56,8 +55,11 @@ const Accuracy: NextPage = () => {
         />
         <Box px={10}>
           <CurrentLocation location={location} />
-          <AccuracyStatistics />
           <ManualLocation location={manualLocation} />
+          <AccuracyStatistics
+            userLocation={location}
+            manualLocation={manualLocation}
+          />
         </Box>
       </Flex>
     </Box>
