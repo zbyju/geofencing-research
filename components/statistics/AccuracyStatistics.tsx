@@ -6,6 +6,8 @@ import {
   StatNumber,
   StatArrow,
   StatHelpText,
+  Box,
+  Heading,
 } from "@chakra-ui/react";
 import { Maybe } from "../../types/generic";
 import { GeoLocation, GeoLocation3D } from "../../types/location";
@@ -119,23 +121,23 @@ const AccuracyStatistics = ({ userLocation, manualLocation }: Props) => {
   ];
 
   return (
-    <>
+    <Box my={3} shadow="md" w="100%" borderRadius="8px" overflow="hidden">
+      <Heading px={5} py={2} size="md" bg="blue.100">
+        Measurement statistics
+      </Heading>
       <Flex
-        my={3}
-        px={5}
-        py={2}
         direction="row"
         justify="space-between"
         align="center"
         wrap="wrap"
         overflowX="scroll"
-        w="100%"
-        shadow="md"
         gap="10px"
+        px={5}
+        py={2}
       >
         {statElements}
       </Flex>
-    </>
+    </Box>
   );
 };
 

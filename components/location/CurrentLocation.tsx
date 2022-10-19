@@ -12,29 +12,35 @@ import {
   Divider,
   Center,
   Flex,
+  Box,
+  Button,
+  Icon,
 } from "@chakra-ui/react";
 import type { GeoLocationMeasured3D } from "../../types/location";
+import { GrFormRefresh } from "react-icons/gr";
 
 interface Props {
   location?: GeoLocationMeasured3D;
+  onLocationRefresh?: () => any;
 }
 
-const CurrentLocation = ({ location }: Props) => {
+const CurrentLocation = ({ location, onLocationRefresh }: Props) => {
   return (
-    <>
+    <Box my={3} shadow="md" borderRadius="8px" overflow="hidden">
+      <Heading px={5} py={2} size="md" bg="red.100">
+        Current location
+      </Heading>
       {location ? (
         <Flex
-          my={3}
-          px={5}
-          py={2}
           direction="row"
           justify="space-between"
           align="center"
           wrap="wrap"
           overflowX="scroll"
           w="100%"
-          shadow="md"
           gap="10px"
+          px={5}
+          py={2}
         >
           <Stat>
             <StatLabel>Latitude</StatLabel>
@@ -64,7 +70,15 @@ const CurrentLocation = ({ location }: Props) => {
       ) : (
         <Text>Unknown location</Text>
       )}
-    </>
+      <Flex direction="row" wrap="wrap" px={5} py={2}>
+        <Button
+          onClick={onLocationRefresh}
+          leftIcon={<Icon as={GrFormRefresh} w={5} h={5} />}
+        >
+          Refresh
+        </Button>
+      </Flex>
+    </Box>
   );
 };
 

@@ -19,7 +19,7 @@ const Accuracy: NextPage = () => {
   const [manualLocation, setManualLocation] =
     useState<Maybe<GeoLocation3D>>(undefined);
 
-  useEffect(() => {
+  const refreshLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -39,6 +39,10 @@ const Accuracy: NextPage = () => {
     } else {
       console.log("Geo not available");
     }
+  };
+
+  useEffect(() => {
+    refreshLocation();
   }, []);
 
   function handleMapClick(location: GeoLocation) {
@@ -54,7 +58,10 @@ const Accuracy: NextPage = () => {
           onClick={handleMapClick}
         />
         <Box px={10}>
-          <CurrentLocation location={location} />
+          <CurrentLocation
+            location={location}
+            onLocationRefresh={refreshLocation}
+          />
           <ManualLocation location={manualLocation} />
           <AccuracyStatistics
             userLocation={location}

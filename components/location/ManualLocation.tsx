@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   Heading,
   Input,
@@ -33,9 +34,11 @@ const ManualLocation = ({ location, onChange }: Props) => {
   }, [location]);
 
   return (
-    <>
+    <Box my={3} shadow="md" borderRadius="8px" overflow="hidden">
+      <Heading px={5} py={2} size="md" bg="purple.100">
+        Manual location
+      </Heading>
       <Flex
-        my={3}
         px={5}
         py={2}
         direction="row"
@@ -44,10 +47,8 @@ const ManualLocation = ({ location, onChange }: Props) => {
         wrap="wrap"
         overflowX="scroll"
         w="100%"
-        shadow="md"
         gap="10px"
       >
-        <Heading size="sm">Manual location:</Heading>
         <NumberInput value={lat} onChange={(s) => setLat(Number(s))}>
           <NumberInputField placeholder="Latitude" w="auto" />
         </NumberInput>
@@ -58,7 +59,7 @@ const ManualLocation = ({ location, onChange }: Props) => {
           <NumberInputField placeholder="Altitude" w="auto" />
         </NumberInput>
       </Flex>
-    </>
+    </Box>
   );
 };
 

@@ -47,7 +47,7 @@ const Nav = () => {
   ];
 
   return (
-    <Box w="100vw" h="50px" shadow="md">
+    <Box w="100vw" h="50px" shadow="md" maxW="100%" overflow="hidden">
       <Flex h="100%" px={2} justify="space-between">
         <Show above="md">
           <Heading alignSelf="center">Geolocation</Heading>
