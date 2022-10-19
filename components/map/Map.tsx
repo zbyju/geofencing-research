@@ -1,9 +1,20 @@
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import { Box, Heading } from "@chakra-ui/react";
-import GoogleMapReact from "google-map-react";
+import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import type { GeoLocation, LocationPin } from "../../types/location";
+import { Maybe } from "../../types/generic";
+import type {
+  GeoLocation,
+  GeoLocationMeasured,
+  LocationPin,
+  MapMarker,
+} from "../../types/location";
+import {
+  isMarkerCorrect,
+  isMarkerDrawn,
+  locationToMarker,
+} from "../../utils/map";
 
 const Marker = ({ lat, lng, color }: any) => (
   <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
@@ -14,11 +25,14 @@ const MapErrorFallback = () => {
 };
 
 interface Props {
-  pins: LocationPin[];
+  userLocation: Maybe<GeoLocationMeasured>;
+  manualLocation: Maybe<GeoLocation>;
+  onClick: (location: GeoLocation) => any;
 }
 
-const Map = ({ pins }: Props) => {
-  const [markers, setMarkers] = useState<any>([]);
+const Map = ({ userLocation, manualLocation, onClick }: Props) => {
+  const [userMarker, setUserMarker] = useState<Maybe<MapMarker>>(undefined);
+  const [manualMarker, setManualMarker] = useState<Maybe<MapMarker>>(undefined);
   const [googleMaps, setGoogleMaps] = useState<any | null>({
     map: undefined,
     maps: undefined,
@@ -39,29 +53,44 @@ const Map = ({ pins }: Props) => {
   };
 
   useEffect(() => {
-    if (googleMaps.map && googleMaps.maps) {
-      setMarkers(
-        pins.map((p) => {
-          return {
-            pin: p,
-            accuracyCircle: new googleMaps.maps.Circle({
-              strokeColor: p.color,
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: p.color,
-              fillOpacity: 0.35,
-              map: googleMaps.map,
-              center: { lat: p.lat, lng: p.lng },
-              radius: p.accuracy || 0.01,
-            }),
-          };
-        })
-      );
+    if (googleMaps.map && googleMaps.maps && userLocation) {
+      if (userMarker?.accuracyCircle !== undefined)
+        userMarker.accuracyCircle.setMap(null);
+      setUserMarker({
+        pin: { ...userLocation, color: "red" },
+        accuracyCircle:
+          userLocation.accuracy !== undefined
+            ? new googleMaps.maps.Circle({
+                strokeColor: "red",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "red",
+                fillOpacity: 0.35,
+                map: googleMaps.map,
+                center: { lat: userLocation.lat, lng: userLocation.lng },
+                radius: userLocation.accuracy || 0.01,
+              })
+            : undefined,
+      });
     }
-    if (pins.length > 0) {
-      changeCenter(pins[0]);
-    }
-  }, [pins, googleMaps]);
+  }, [userLocation, googleMaps]);
+
+  useEffect(() => {
+    if (manualLocation === undefined) return setManualMarker(undefined);
+    setManualMarker({
+      pin: {
+        ...manualLocation,
+        color: "purple",
+      },
+    });
+  }, [manualLocation]);
+
+  function handleClick(e: ClickEventValue) {
+    onClick({
+      lat: e.lat,
+      lng: e.lng,
+    });
+  }
 
   return (
     <>
@@ -75,10 +104,22 @@ const Map = ({ pins }: Props) => {
             defaultZoom={defaultProps.zoom}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map, maps }) => apiIsLoaded(map, maps)}
+            onClick={handleClick}
           >
-            {pins.map((p) => (
-              <Marker key={p.lat.toString() + p.lng.toString()} {...p} />
-            ))}
+            {userMarker?.pin !== undefined && (
+              <Marker
+                lat={userMarker.pin.lat}
+                lng={userMarker.pin.lng}
+                color={userMarker.pin.color}
+              />
+            )}
+            {manualMarker?.pin !== undefined && (
+              <Marker
+                lat={manualMarker.pin.lat}
+                lng={manualMarker.pin.lng}
+                color={manualMarker.pin.color}
+              />
+            )}
           </GoogleMapReact>
         </Box>
       </ErrorBoundary>

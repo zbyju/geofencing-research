@@ -6,22 +6,27 @@ export interface GeoLocation {
 }
 
 export interface GeoLocation3D extends GeoLocation {
-  alt: number | null;
+  alt: Maybe<number>;
 }
 
 export interface GeoLocationMeasured extends GeoLocation {
-  accuracy: number | null;
+  accuracy: Maybe<number>;
 }
 
 export interface GeoLocationMeasured3D
   extends GeoLocation3D,
     GeoLocationMeasured {
-  accuracyAlt: number | null;
+  accuracyAlt: Maybe<number>;
 }
 
 export interface LocationPin {
   lat: number;
   lng: number;
   color: string;
-  accuracy: Maybe<number>;
+  accuracy?: Maybe<number>;
+}
+
+export interface MapMarker {
+  pin: LocationPin;
+  accuracyCircle?: any;
 }
