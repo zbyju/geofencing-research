@@ -32,16 +32,17 @@ const AccuracyStatistics = ({ userLocation, manualLocation }: Props) => {
     l: Maybe<number>
   ): StatsError | undefined {
     if (u === undefined || l === undefined) return undefined;
-    const absolute = Math.abs(u - l);
-    const relativeVal = (absolute / l) * 100;
+    const absolute = u - l;
     const type: "increase" | "decrease" | undefined =
-      relativeVal > 0 ? "increase" : relativeVal < 0 ? "decrease" : undefined;
+      absolute > 0 ? "increase" : absolute < 0 ? "decrease" : undefined;
+    const absoluteVal = Math.abs(absolute);
+    const relativeVal = (absoluteVal / l) * 100;
     const relative = {
       value: relativeVal,
       type,
     };
     return {
-      absolute,
+      absolute: absoluteVal,
       relative,
     };
   }
