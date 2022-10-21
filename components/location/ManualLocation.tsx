@@ -32,6 +32,13 @@ const ManualLocation = ({ location, onChange }: Props) => {
     if (location.alt !== undefined) setAlt(location.alt);
   }, [location]);
 
+  useEffect(() => {
+    onChange &&
+      lat !== undefined &&
+      lng !== undefined &&
+      onChange({ lat, lng, alt });
+  }, [lat, lng, alt]);
+
   return (
     <Box my={3} shadow="md" borderRadius="8px" overflow="hidden">
       <Heading px={5} py={2} size="md" bg="purple.100">

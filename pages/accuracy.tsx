@@ -49,6 +49,10 @@ const Accuracy: NextPage = () => {
     setManualLocation({ ...location, alt: undefined });
   }
 
+  function handleManualLocationChange(location: GeoLocation3D) {
+    setManualLocation({ ...location });
+  }
+
   return (
     <Box w="100%">
       <Flex direction="column">
@@ -62,7 +66,10 @@ const Accuracy: NextPage = () => {
             location={location}
             onLocationRefresh={refreshLocation}
           />
-          <ManualLocation location={manualLocation} />
+          <ManualLocation
+            location={manualLocation}
+            onChange={handleManualLocationChange}
+          />
           <AccuracyStatistics
             userLocation={location}
             manualLocation={manualLocation}
