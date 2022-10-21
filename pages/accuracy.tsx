@@ -5,13 +5,13 @@ import CurrentLocation from "../components/location/CurrentLocation";
 import ManualLocation from "../components/location/ManualLocation";
 import Map from "../components/map/Map";
 import AccuracyStatistics from "../components/statistics/AccuracyStatistics";
-import type { Maybe } from "../types/generic";
+import type { Maybe } from "../types/generic.types";
 import type {
   GeoLocation,
   GeoLocation3D,
   GeoLocationMeasured3D,
   LocationPin,
-} from "../types/location";
+} from "../types/location.types";
 
 const Accuracy: NextPage = () => {
   const [location, setLocation] =

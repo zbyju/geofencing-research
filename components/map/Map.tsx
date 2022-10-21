@@ -11,13 +11,13 @@ import {
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Maybe } from "../../types/generic";
+import { Maybe } from "../../types/generic.types";
 import type {
   GeoLocation,
   GeoLocationMeasured,
   LocationPin,
   MapMarker,
-} from "../../types/location";
+} from "../../types/location.types";
 import {
   isMarkerCorrect,
   isMarkerDrawn,

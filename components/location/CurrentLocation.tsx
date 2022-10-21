@@ -16,7 +16,7 @@ import {
   Button,
   Icon,
 } from "@chakra-ui/react";
-import type { GeoLocationMeasured3D } from "../../types/location";
+import type { GeoLocationMeasured3D } from "../../types/location.types";
 import { GrFormRefresh } from "react-icons/gr";
 
 interface Props {

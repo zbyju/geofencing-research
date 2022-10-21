@@ -1,10 +1,10 @@
-import { Maybe } from "../types/generic";
+import { Maybe } from "../types/generic.types";
 import {
   GeoLocation,
   GeoLocationMeasured,
   LocationPin,
   MapMarker,
-} from "../types/location";
+} from "../types/location.types";
 
 export const locationToMarker = (
   googleMaps: any,

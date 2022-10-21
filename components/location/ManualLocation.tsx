@@ -12,8 +12,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Maybe } from "../../types/generic";
-import { GeoLocation3D } from "../../types/location";
+import { Maybe } from "../../types/generic.types";
+import { GeoLocation3D } from "../../types/location.types";
 
 interface Props {
   location?: GeoLocation3D;
