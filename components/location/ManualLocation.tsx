@@ -11,6 +11,7 @@ import { GeoLocation3D } from "../../types/location.types";
 
 interface Props {
   location?: GeoLocation3D;
+  // eslint-disable-next-line unused-imports/no-unused-vars
   onChange?: (newLocation: GeoLocation3D) => any;
 }
 
@@ -31,7 +32,7 @@ const ManualLocation = ({ location, onChange }: Props) => {
       lat !== undefined &&
       lng !== undefined &&
       onChange({ lat, lng, alt });
-  }, [lat, lng, alt]);
+  }, [lat, lng, alt, onChange]);
 
   return (
     <Box my={3} shadow="md" borderRadius="8px" overflow="hidden">

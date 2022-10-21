@@ -18,8 +18,7 @@ import type {
   MapMarker,
 } from "../../types/location.types";
 
-
-
+// eslint-disable-next-line unused-imports/no-unused-vars
 const Marker = ({ lat, lng, color }: any) => (
   <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
 );
@@ -31,6 +30,7 @@ const MapErrorFallback = () => {
 interface Props {
   userLocation: Maybe<GeoLocationMeasured>;
   manualLocation: Maybe<GeoLocation>;
+  // eslint-disable-next-line unused-imports/no-unused-vars
   onClick: (location: GeoLocation) => any;
 }
 
@@ -89,6 +89,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
             : undefined,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, googleMaps]);
 
   // Updates manual location marker
@@ -155,7 +156,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
             id="email-alerts"
             alignSelf="center"
             isChecked={shouldChangeCenter}
-            onChange={(e) => setShouldChangeCenter(!shouldChangeCenter)}
+            onChange={() => setShouldChangeCenter(!shouldChangeCenter)}
           />
         </Flex>
       </ErrorBoundary>
