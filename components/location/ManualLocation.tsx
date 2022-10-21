@@ -2,14 +2,8 @@ import {
   Box,
   Flex,
   Heading,
-  Input,
-  InputRightAddon,
   NumberInput,
   NumberInputField,
-  Stat,
-  StatLabel,
-  StatNumber,
-  Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Maybe } from "../../types/generic.types";

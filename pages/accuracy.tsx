@@ -10,7 +10,6 @@ import type {
   GeoLocation,
   GeoLocation3D,
   GeoLocationMeasured3D,
-  LocationPin,
 } from "../types/location.types";
 
 const Accuracy: NextPage = () => {

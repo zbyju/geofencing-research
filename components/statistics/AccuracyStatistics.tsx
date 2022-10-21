@@ -1,6 +1,5 @@
 import {
   Flex,
-  Text,
   Stat,
   StatLabel,
   StatNumber,
@@ -10,7 +9,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { Maybe } from "../../types/generic.types";
-import { GeoLocation, GeoLocation3D } from "../../types/location.types";
+import { GeoLocation3D } from "../../types/location.types";
 import { StatsError } from "../../types/statistics.types";
 import {
   calculateDistance,

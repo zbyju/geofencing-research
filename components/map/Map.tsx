@@ -15,14 +15,10 @@ import { Maybe } from "../../types/generic.types";
 import type {
   GeoLocation,
   GeoLocationMeasured,
-  LocationPin,
   MapMarker,
 } from "../../types/location.types";
-import {
-  isMarkerCorrect,
-  isMarkerDrawn,
-  locationToMarker,
-} from "../../utils/map";
+
+
 
 const Marker = ({ lat, lng, color }: any) => (
   <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
