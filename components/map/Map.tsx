@@ -48,6 +48,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
   const [shouldChangeCenter, setShouldChangeCenter] = useState<boolean>(true);
   const [shouldShowMarkers, setShouldShowMarkers] = useState<boolean>(true);
 
+  // Default props for the map component
   const defaultProps = {
     center: {
       lat: 60.172059,
@@ -55,15 +56,19 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
     },
     zoom: 12,
   };
+
   const apiIsLoaded = (map: any, maps: any) => {
     setGoogleMaps({ map, maps });
   };
 
+  // Change center of the map to the location in @param
   const changeCenter = (location: GeoLocation) => {
     if (googleMaps.map === undefined) return;
     googleMaps.map.setCenter(location);
   };
 
+  // Centers map when user location changes
+  // Updates user marker and accuracy circle when location changes
   useEffect(() => {
     if (googleMaps.map && googleMaps.maps && userLocation) {
       if (shouldChangeCenter && userLocation !== undefined) {
@@ -90,6 +95,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
     }
   }, [userLocation, googleMaps]);
 
+  // Updates manual location marker
   useEffect(() => {
     if (manualLocation === undefined) return setManualMarker(undefined);
     setManualMarker({
