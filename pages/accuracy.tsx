@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { useEffect, useState } from "react";
 import CurrentLocation from "../components/location/CurrentLocation";
 import ManualLocation from "../components/location/ManualLocation";
-import Map from "../components/map/Map";
+import Map from "../components/map/LocationMap";
 import AccuracyStatistics from "../components/statistics/AccuracyStatistics";
 import type { Maybe } from "../types/generic.types";
 import type {
