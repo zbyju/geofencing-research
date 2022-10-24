@@ -1,6 +1,5 @@
 import {
   Flex,
-  Text,
   Stat,
   StatLabel,
   StatNumber,
@@ -9,62 +8,21 @@ import {
   Box,
   Heading,
 } from "@chakra-ui/react";
-import { Maybe } from "../../types/generic";
-import { GeoLocation, GeoLocation3D } from "../../types/location";
-const { greatCircleDistance } = require("great-circle-distance");
+import { Maybe } from "../../types/generic.types";
+import { GeoLocation3D } from "../../types/location.types";
+import { StatsError } from "../../types/statistics.types";
+import {
+  calculateDistance,
+  calculateDistance3D,
+  calculateError,
+} from "../../utils/statistics";
 
 interface Props {
   userLocation: Maybe<GeoLocation3D>;
   manualLocation: Maybe<GeoLocation3D>;
 }
 
-interface StatsError {
-  absolute: number;
-  relative: {
-    type: "increase" | "decrease" | undefined;
-    value: number;
-  };
-}
-
 const AccuracyStatistics = ({ userLocation, manualLocation }: Props) => {
-  function calculateError(
-    u: Maybe<number>,
-    l: Maybe<number>
-  ): StatsError | undefined {
-    if (u === undefined || l === undefined) return undefined;
-    const absolute = u - l;
-    const type: "increase" | "decrease" | undefined =
-      absolute > 0 ? "increase" : absolute < 0 ? "decrease" : undefined;
-    const absoluteVal = Math.abs(absolute);
-    const relativeVal = (absoluteVal / l) * 100;
-    const relative = {
-      value: relativeVal,
-      type,
-    };
-    return {
-      absolute: absoluteVal,
-      relative,
-    };
-  }
-
-  function calculateDistance(u: GeoLocation, l: GeoLocation): number {
-    return (
-      greatCircleDistance({
-        lat1: u.lat,
-        lat2: l.lat,
-        lng1: u.lng,
-        lng2: l.lng,
-      }) * 1000
-    );
-  }
-  function calculateDistance3D(
-    u: GeoLocation3D,
-    l: GeoLocation3D
-  ): Maybe<number> {
-    if (u.alt === undefined || l.alt === undefined) return undefined;
-    return Math.sqrt(calculateDistance(u, l) ** 2 + (u.alt - l.alt) ** 2);
-  }
-
   const stats =
     userLocation && manualLocation
       ? {

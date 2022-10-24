@@ -3,9 +3,7 @@ import {
   Button,
   Flex,
   Heading,
-  Hide,
   Icon,
-  Link,
   Show,
 } from "@chakra-ui/react";
 import NextLink from "next/link";

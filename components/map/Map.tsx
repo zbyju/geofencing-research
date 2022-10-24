@@ -11,19 +11,14 @@ import {
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { Maybe } from "../../types/generic";
+import { Maybe } from "../../types/generic.types";
 import type {
   GeoLocation,
   GeoLocationMeasured,
-  LocationPin,
   MapMarker,
-} from "../../types/location";
-import {
-  isMarkerCorrect,
-  isMarkerDrawn,
-  locationToMarker,
-} from "../../utils/map";
+} from "../../types/location.types";
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const Marker = ({ lat, lng, color }: any) => (
   <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
 );
@@ -35,6 +30,7 @@ const MapErrorFallback = () => {
 interface Props {
   userLocation: Maybe<GeoLocationMeasured>;
   manualLocation: Maybe<GeoLocation>;
+  // eslint-disable-next-line unused-imports/no-unused-vars
   onClick: (location: GeoLocation) => any;
 }
 
@@ -48,6 +44,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
   const [shouldChangeCenter, setShouldChangeCenter] = useState<boolean>(true);
   const [shouldShowMarkers, setShouldShowMarkers] = useState<boolean>(true);
 
+  // Default props for the map component
   const defaultProps = {
     center: {
       lat: 60.172059,
@@ -55,15 +52,19 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
     },
     zoom: 12,
   };
+
   const apiIsLoaded = (map: any, maps: any) => {
     setGoogleMaps({ map, maps });
   };
 
+  // Change center of the map to the location in @param
   const changeCenter = (location: GeoLocation) => {
     if (googleMaps.map === undefined) return;
     googleMaps.map.setCenter(location);
   };
 
+  // Centers map when user location changes
+  // Updates user marker and accuracy circle when location changes
   useEffect(() => {
     if (googleMaps.map && googleMaps.maps && userLocation) {
       if (shouldChangeCenter && userLocation !== undefined) {
@@ -88,8 +89,10 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
             : undefined,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, googleMaps]);
 
+  // Updates manual location marker
   useEffect(() => {
     if (manualLocation === undefined) return setManualMarker(undefined);
     setManualMarker({
@@ -153,7 +156,7 @@ const Map = ({ userLocation, manualLocation, onClick }: Props) => {
             id="email-alerts"
             alignSelf="center"
             isChecked={shouldChangeCenter}
-            onChange={(e) => setShouldChangeCenter(!shouldChangeCenter)}
+            onChange={() => setShouldChangeCenter(!shouldChangeCenter)}
           />
         </Flex>
       </ErrorBoundary>
