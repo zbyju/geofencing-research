@@ -1,17 +1,10 @@
-import { TriangleDownIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  FormLabel,
-  Heading,
-  Icon,
-  Switch,
-} from "@chakra-ui/react";
+import { TriangleDownIcon } from "@chakra-ui/icons";
+import { Box, Heading } from "@chakra-ui/react";
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Maybe } from "../../types/generic.types";
+import { Geofence } from "../../types/geofence.types";
 import type {
   GeoLocation,
   GeoLocationMeasured,
@@ -29,20 +22,17 @@ const MapErrorFallback = () => {
 
 interface Props {
   userLocation: Maybe<GeoLocationMeasured>;
-  manualLocation: Maybe<GeoLocation>;
+  geofence: Maybe<Geofence>;
   // eslint-disable-next-line unused-imports/no-unused-vars
   onClick: (location: GeoLocation) => any;
 }
 
-const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
+const GeofenceMap = ({ userLocation, geofence, onClick }: Props) => {
   const [userMarker, setUserMarker] = useState<Maybe<MapMarker>>(undefined);
-  const [manualMarker, setManualMarker] = useState<Maybe<MapMarker>>(undefined);
   const [googleMaps, setGoogleMaps] = useState<any | null>({
     map: undefined,
     maps: undefined,
   });
-  const [shouldChangeCenter, setShouldChangeCenter] = useState<boolean>(true);
-  const [shouldShowMarkers, setShouldShowMarkers] = useState<boolean>(true);
 
   // Default props for the map component
   const defaultProps = {
@@ -57,21 +47,13 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
     setGoogleMaps({ map, maps });
   };
 
-  // Change center of the map to the location in @param
-  const changeCenter = (location: GeoLocation) => {
-    if (googleMaps.map === undefined) return;
-    googleMaps.map.setCenter(location);
-  };
-
   // Centers map when user location changes
   // Updates user marker and accuracy circle when location changes
   useEffect(() => {
     if (googleMaps.map && googleMaps.maps && userLocation) {
-      if (shouldChangeCenter && userLocation !== undefined) {
-        changeCenter(userLocation);
-      }
-      if (userMarker?.accuracyCircle !== undefined)
+      if (userMarker?.accuracyCircle !== undefined) {
         userMarker.accuracyCircle.setMap(null);
+      }
       setUserMarker({
         pin: { ...userLocation, color: "red" },
         accuracyCircle:
@@ -91,17 +73,6 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, googleMaps]);
-
-  // Updates manual location marker
-  useEffect(() => {
-    if (manualLocation === undefined) return setManualMarker(undefined);
-    setManualMarker({
-      pin: {
-        ...manualLocation,
-        color: "purple",
-      },
-    });
-  }, [manualLocation]);
 
   function handleClick(e: ClickEventValue) {
     onClick({
@@ -124,44 +95,18 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
             onGoogleApiLoaded={({ map, maps }) => apiIsLoaded(map, maps)}
             onClick={handleClick}
           >
-            {shouldShowMarkers && userMarker?.pin !== undefined && (
+            {userMarker?.pin !== undefined && (
               <Marker
                 lat={userMarker.pin.lat}
                 lng={userMarker.pin.lng}
                 color={userMarker.pin.color}
               />
             )}
-            {shouldShowMarkers && manualMarker?.pin !== undefined && (
-              <Marker
-                lat={manualMarker.pin.lat}
-                lng={manualMarker.pin.lng}
-                color={manualMarker.pin.color}
-              />
-            )}
           </GoogleMapReact>
         </Box>
-        <Flex px={3} py={1} direction="row" wrap="wrap" shadow="md">
-          <Button
-            size="sm"
-            onClick={() => setShouldShowMarkers(!shouldShowMarkers)}
-            leftIcon={<Icon as={shouldShowMarkers ? ViewOffIcon : ViewIcon} />}
-          >
-            {shouldShowMarkers ? "Hide markers" : "Show markers"}
-          </Button>
-
-          <FormLabel htmlFor="email-alerts" mb="0" alignSelf="center" ml={3}>
-            Recenter on change?
-          </FormLabel>
-          <Switch
-            id="email-alerts"
-            alignSelf="center"
-            isChecked={shouldChangeCenter}
-            onChange={() => setShouldChangeCenter(!shouldChangeCenter)}
-          />
-        </Flex>
       </ErrorBoundary>
     </>
   );
 };
 
-export default LocationMap;
+export default GeofenceMap;

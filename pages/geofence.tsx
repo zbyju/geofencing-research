@@ -1,10 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import CurrentLocation from "../components/location/CurrentLocation";
-import ManualLocation from "../components/location/ManualLocation";
-import LocationMap from "../components/map/LocationMap";
-import AccuracyStatistics from "../components/statistics/AccuracyStatistics";
+import GeofenceMap from "../components/map/GeofenceMap";
 import type { Maybe } from "../types/generic.types";
 import type {
   GeoLocation,
@@ -48,32 +45,14 @@ const Accuracy: NextPage = () => {
     setManualLocation({ ...location, alt: undefined });
   }
 
-  function handleManualLocationChange(location: GeoLocation3D) {
-    setManualLocation({ ...location });
-  }
-
   return (
     <Box w="100%">
       <Flex direction="column">
-        <LocationMap
+        <GeofenceMap
           userLocation={location}
           manualLocation={manualLocation}
           onClick={handleMapClick}
         />
-        <Box px={10}>
-          <CurrentLocation
-            location={location}
-            onLocationRefresh={refreshLocation}
-          />
-          <ManualLocation
-            location={manualLocation}
-            onChange={handleManualLocationChange}
-          />
-          <AccuracyStatistics
-            userLocation={location}
-            manualLocation={manualLocation}
-          />
-        </Box>
       </Flex>
     </Box>
   );
