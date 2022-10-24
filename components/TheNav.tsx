@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Icon,
-  Show,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Icon, Show } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { FaHome } from "react-icons/fa";
 import { SiSpeedtest } from "react-icons/si";
@@ -39,8 +32,7 @@ const Nav = () => {
     {
       text: "Geofencing",
       icon: <Icon as={MdShareLocation} {...iconStyle} />,
-      href: "/geofencing",
-      disabled: true,
+      href: "/geofence",
     },
   ];
 
