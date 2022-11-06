@@ -1,6 +1,14 @@
+import { GeoLocation } from "./location.types";
+
 export interface Geofence {
   points: GeofencePoint[];
   active: boolean;
 }
 
-export type GeofencePoint = number;
+export interface GeofencePolygon extends Geofence {
+  polygon: any;
+}
+
+export interface GeofencePoint extends GeoLocation {
+  id: string;
+}

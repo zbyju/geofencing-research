@@ -5,7 +5,6 @@ import GeofenceMap from "../components/map/GeofenceMap";
 import type { Maybe } from "../types/generic.types";
 import type {
   GeoLocation,
-  GeoLocation3D,
   GeoLocationMeasured3D,
 } from "../types/location.types";
 
@@ -13,7 +12,7 @@ const Accuracy: NextPage = () => {
   const [location, setLocation] =
     useState<Maybe<GeoLocationMeasured3D>>(undefined);
   const [manualLocation, setManualLocation] =
-    useState<Maybe<GeoLocation3D>>(undefined);
+    useState<Maybe<GeoLocation>>(undefined);
 
   const refreshLocation = () => {
     if ("geolocation" in navigator) {
@@ -42,7 +41,7 @@ const Accuracy: NextPage = () => {
   }, []);
 
   function handleMapClick(location: GeoLocation) {
-    setManualLocation({ ...location, alt: undefined });
+    setManualLocation({ ...location });
   }
 
   return (
@@ -50,7 +49,7 @@ const Accuracy: NextPage = () => {
       <Flex direction="column">
         <GeofenceMap
           userLocation={location}
-          manualLocation={manualLocation}
+          geofence={undefined}
           onClick={handleMapClick}
         />
       </Flex>

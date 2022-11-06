@@ -4,12 +4,14 @@ import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Maybe } from "../../types/generic.types";
-import { Geofence } from "../../types/geofence.types";
+import { Geofence, GeofencePoint } from "../../types/geofence.types";
+import { v4 as uuid } from "uuid";
 import type {
   GeoLocation,
   GeoLocationMeasured,
   MapMarker,
 } from "../../types/location.types";
+import PointList from "./PointList";
 
 // eslint-disable-next-line unused-imports/no-unused-vars
 const Marker = ({ lat, lng, color }: any) => (
@@ -29,10 +31,46 @@ interface Props {
 
 const GeofenceMap = ({ userLocation, geofence, onClick }: Props) => {
   const [userMarker, setUserMarker] = useState<Maybe<MapMarker>>(undefined);
+  const [geopoints, setGeopoints] = useState<GeofencePoint[]>([]);
+  const [polygon, setPolygon] = useState<any>(undefined);
+  const [newPoint, setNewPoint] = useState<Maybe<GeoLocation>>(undefined);
   const [googleMaps, setGoogleMaps] = useState<any | null>({
     map: undefined,
     maps: undefined,
   });
+
+  const handleAdd = () => {
+    if (newPoint === undefined) return;
+    const id = uuid();
+    setGeopoints(geopoints.concat({ ...newPoint, id }));
+    setNewPoint(undefined);
+  };
+
+  const handleRemove = (id: any) => {
+    setGeopoints(geopoints.filter((p) => p.id !== id));
+  };
+
+  useEffect(() => {
+    if (googleMaps && geopoints.length > 2) {
+      if (polygon) {
+        polygon.setMap(null);
+      }
+      const path = geopoints
+        .map((p) => ({ lat: p.lat, lng: p.lng }))
+        .concat(geopoints[0]);
+      const poly = new googleMaps.maps.Polygon({
+        paths: path,
+        strokeColor: "purple",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "purple",
+        fillOpacity: 0.35,
+      });
+      setPolygon(poly);
+      poly.setMap(googleMaps.map);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleMaps, geopoints]);
 
   // Default props for the map component
   const defaultProps = {
@@ -75,7 +113,7 @@ const GeofenceMap = ({ userLocation, geofence, onClick }: Props) => {
   }, [userLocation, googleMaps]);
 
   function handleClick(e: ClickEventValue) {
-    onClick({
+    setNewPoint({
       lat: e.lat,
       lng: e.lng,
     });
@@ -102,7 +140,16 @@ const GeofenceMap = ({ userLocation, geofence, onClick }: Props) => {
                 color={userMarker.pin.color}
               />
             )}
+            {newPoint !== undefined && (
+              <Marker lat={newPoint.lat} lng={newPoint.lng} color="purple" />
+            )}
           </GoogleMapReact>
+          <PointList
+            geofence={geopoints}
+            newPoint={newPoint}
+            onAdd={handleAdd}
+            onRemove={handleRemove}
+          />
         </Box>
       </ErrorBoundary>
     </>
