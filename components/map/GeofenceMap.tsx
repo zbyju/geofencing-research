@@ -51,10 +51,10 @@ const GeofenceMap = ({ userLocation, geofence, onClick }: Props) => {
   };
 
   useEffect(() => {
+    if (googleMaps && polygon) {
+      polygon.setMap(null);
+    }
     if (googleMaps && geopoints.length > 2) {
-      if (polygon) {
-        polygon.setMap(null);
-      }
       const path = geopoints
         .map((p) => ({ lat: p.lat, lng: p.lng }))
         .concat(geopoints[0]);
