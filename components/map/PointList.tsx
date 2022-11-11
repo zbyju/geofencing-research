@@ -16,9 +16,18 @@ interface Props {
   newPoint: Maybe<GeoLocation>;
   onAdd: () => any;
   onRemove?: (_: string) => any;
+  onHoverStart?: (_: string) => any;
+  onHoverEnd?: (_: string) => any;
 }
 
-const PointList = ({ geofence, newPoint, onAdd, onRemove }: Props) => {
+const PointList = ({
+  geofence,
+  newPoint,
+  onAdd,
+  onRemove,
+  onHoverStart,
+  onHoverEnd,
+}: Props) => {
   return (
     <>
       <Box boxShadow="md" py={3}>
@@ -30,15 +39,27 @@ const PointList = ({ geofence, newPoint, onAdd, onRemove }: Props) => {
               return (
                 <Flex direction="row" gap="5px" wrap="wrap" key={p.id}>
                   <Flex direction="row" gap="5px" wrap="wrap" m="auto">
-                    <NumberInput value={p.lat} isReadOnly m="auto">
+                    <NumberInput
+                      value={p.lat}
+                      isReadOnly
+                      m="auto"
+                      bg="gray.100"
+                    >
                       <NumberInputField placeholder="Latitude" w="100%" />
                     </NumberInput>
-                    <NumberInput value={p.lng} isReadOnly m="auto">
+                    <NumberInput
+                      value={p.lng}
+                      isReadOnly
+                      m="auto"
+                      bg="gray.100"
+                    >
                       <NumberInputField placeholder="Longitude" w="100%" />
                     </NumberInput>
                   </Flex>
                   <Button
                     onClick={() => onRemove && onRemove(p.id)}
+                    onMouseEnter={() => onHoverStart && onHoverStart(p.id)}
+                    onMouseLeave={() => onHoverEnd && onHoverEnd(p.id)}
                     m="auto"
                     colorScheme="red"
                   >

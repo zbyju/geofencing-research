@@ -11,4 +11,5 @@ export interface GeofencePolygon extends Geofence {
 
 export interface GeofencePoint extends GeoLocation {
   id: string;
+  hovered?: boolean;
 }

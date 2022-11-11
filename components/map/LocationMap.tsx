@@ -1,4 +1,4 @@
-import { TriangleDownIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { userLocationColor } from "../../styles/colors";
 import { Maybe } from "../../types/generic.types";
 import type {
   GeoLocation,
@@ -19,11 +20,7 @@ import type {
   MapMarker,
 } from "../../types/location.types";
 import { isNumeric } from "../../utils/typeChecking";
-
-// eslint-disable-next-line unused-imports/no-unused-vars
-const Marker = ({ lat, lng, color }: any) => (
-  <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
-);
+import Marker from "./Marker";
 
 const MapErrorFallback = () => {
   return <Heading>There has been an error, when loading the map.</Heading>;
@@ -75,14 +72,14 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
       if (userMarker?.accuracyCircle !== undefined)
         userMarker.accuracyCircle.setMap(null);
       setUserMarker({
-        pin: { ...userLocation, color: "red" },
+        pin: { ...userLocation, color: userLocationColor },
         accuracyCircle:
           userLocation.accuracy !== undefined
             ? new googleMaps.maps.Circle({
-                strokeColor: "red",
+                strokeColor: userLocationColor,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: "red",
+                fillColor: userLocationColor,
                 fillOpacity: 0.35,
                 map: googleMaps.map,
                 center: { lat: userLocation.lat, lng: userLocation.lng },
