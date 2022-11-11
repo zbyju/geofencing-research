@@ -2,7 +2,7 @@ import { Icon } from "@chakra-ui/react";
 import { IoLocationSharp } from "react-icons/io5";
 
 const Marker = ({ color, size = "md" }: any) => {
-  const boxSize = size === "md" ? 30 : size === "sm" ? 20 : 30;
+  const boxSize = size === "md" ? 30 : size === "sm" ? 25 : 30;
   const boxSizePx = boxSize + "px";
   return (
     <Icon

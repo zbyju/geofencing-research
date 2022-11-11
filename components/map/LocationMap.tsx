@@ -11,6 +11,7 @@ import {
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { userLocationColor } from "../../styles/colors";
 import { Maybe } from "../../types/generic.types";
 import type {
   GeoLocation,
@@ -71,14 +72,14 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
       if (userMarker?.accuracyCircle !== undefined)
         userMarker.accuracyCircle.setMap(null);
       setUserMarker({
-        pin: { ...userLocation, color: "red" },
+        pin: { ...userLocation, color: userLocationColor },
         accuracyCircle:
           userLocation.accuracy !== undefined
             ? new googleMaps.maps.Circle({
-                strokeColor: "red",
+                strokeColor: userLocationColor,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: "red",
+                fillColor: userLocationColor,
                 fillOpacity: 0.35,
                 map: googleMaps.map,
                 center: { lat: userLocation.lat, lng: userLocation.lng },
