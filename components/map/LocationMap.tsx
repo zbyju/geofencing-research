@@ -15,8 +15,10 @@ import { Maybe } from "../../types/generic.types";
 import type {
   GeoLocation,
   GeoLocationMeasured,
+  ManualGeoLocation,
   MapMarker,
 } from "../../types/location.types";
+import { isNumeric } from "../../utils/typeChecking";
 
 // eslint-disable-next-line unused-imports/no-unused-vars
 const Marker = ({ lat, lng, color }: any) => (
@@ -29,7 +31,7 @@ const MapErrorFallback = () => {
 
 interface Props {
   userLocation: Maybe<GeoLocationMeasured>;
-  manualLocation: Maybe<GeoLocation>;
+  manualLocation: ManualGeoLocation;
   // eslint-disable-next-line unused-imports/no-unused-vars
   onClick: (location: GeoLocation) => any;
 }
@@ -94,13 +96,15 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
 
   // Updates manual location marker
   useEffect(() => {
-    if (manualLocation === undefined) return setManualMarker(undefined);
-    setManualMarker({
-      pin: {
-        ...manualLocation,
-        color: "purple",
-      },
-    });
+    if (isNumeric(manualLocation.lat) && isNumeric(manualLocation.lng)) {
+      setManualMarker({
+        pin: {
+          lat: manualLocation.lat,
+          lng: manualLocation.lng,
+          color: "purple",
+        },
+      });
+    }
   }, [manualLocation]);
 
   function handleClick(e: ClickEventValue) {

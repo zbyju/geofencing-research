@@ -8,15 +8,18 @@ import AccuracyStatistics from "../components/statistics/AccuracyStatistics";
 import type { Maybe } from "../types/generic.types";
 import type {
   GeoLocation,
-  GeoLocation3D,
   GeoLocationMeasured3D,
+  ManualGeoLocation3D,
 } from "../types/location.types";
 
 const Accuracy: NextPage = () => {
   const [location, setLocation] =
     useState<Maybe<GeoLocationMeasured3D>>(undefined);
-  const [manualLocation, setManualLocation] =
-    useState<Maybe<GeoLocation3D>>(undefined);
+  const [manualLocation, setManualLocation] = useState<ManualGeoLocation3D>({
+    lat: undefined,
+    lng: undefined,
+    alt: undefined,
+  });
 
   const refreshLocation = () => {
     if ("geolocation" in navigator) {
@@ -48,8 +51,14 @@ const Accuracy: NextPage = () => {
     setManualLocation({ ...location, alt: undefined });
   }
 
-  function handleManualLocationChange(location: GeoLocation3D) {
-    setManualLocation({ ...location });
+  function handleManualLocationChangeLat(lat: string | number) {
+    setManualLocation({ ...manualLocation, lat });
+  }
+  function handleManualLocationChangeLng(lng: string | number) {
+    setManualLocation({ ...manualLocation, lng });
+  }
+  function handleManualLocationChangeAlt(alt: string | number) {
+    setManualLocation({ ...manualLocation, alt });
   }
 
   return (
@@ -67,7 +76,9 @@ const Accuracy: NextPage = () => {
           />
           <ManualLocation
             location={manualLocation}
-            onChange={handleManualLocationChange}
+            onChangeLat={handleManualLocationChangeLat}
+            onChangeLng={handleManualLocationChangeLng}
+            onChangeAlt={handleManualLocationChangeAlt}
           />
           <AccuracyStatistics
             userLocation={location}

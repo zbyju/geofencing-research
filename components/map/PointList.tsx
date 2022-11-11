@@ -15,7 +15,7 @@ interface Props {
   geofence: GeofencePoint[];
   newPoint: Maybe<GeoLocation>;
   onAdd: () => any;
-  onRemove?: (id: string) => any;
+  onRemove?: (_: string) => any;
 }
 
 const PointList = ({ geofence, newPoint, onAdd, onRemove }: Props) => {
@@ -29,13 +29,19 @@ const PointList = ({ geofence, newPoint, onAdd, onRemove }: Props) => {
             geofence.map((p) => {
               return (
                 <Flex direction="row" gap="5px" wrap="wrap" key={p.id}>
-                  <NumberInput value={p.lat} isReadOnly>
-                    <NumberInputField placeholder="Latitude" w="auto" />
-                  </NumberInput>
-                  <NumberInput value={p.lng} isReadOnly>
-                    <NumberInputField placeholder="Longitude" w="auto" />
-                  </NumberInput>
-                  <Button onClick={() => onRemove && onRemove(p.id)}>
+                  <Flex direction="row" gap="5px" wrap="wrap" m="auto">
+                    <NumberInput value={p.lat} isReadOnly m="auto">
+                      <NumberInputField placeholder="Latitude" w="100%" />
+                    </NumberInput>
+                    <NumberInput value={p.lng} isReadOnly m="auto">
+                      <NumberInputField placeholder="Longitude" w="100%" />
+                    </NumberInput>
+                  </Flex>
+                  <Button
+                    onClick={() => onRemove && onRemove(p.id)}
+                    m="auto"
+                    colorScheme="red"
+                  >
                     Remove
                   </Button>
                 </Flex>

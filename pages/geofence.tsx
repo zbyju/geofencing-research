@@ -11,8 +11,7 @@ import type {
 const Accuracy: NextPage = () => {
   const [location, setLocation] =
     useState<Maybe<GeoLocationMeasured3D>>(undefined);
-  const [manualLocation, setManualLocation] =
-    useState<Maybe<GeoLocation>>(undefined);
+  const [_, setManualLocation] = useState<Maybe<GeoLocation>>(undefined);
 
   const refreshLocation = () => {
     if ("geolocation" in navigator) {

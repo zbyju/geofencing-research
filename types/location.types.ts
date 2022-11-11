@@ -9,6 +9,15 @@ export interface GeoLocation3D extends GeoLocation {
   alt: Maybe<number>;
 }
 
+export interface ManualGeoLocation {
+  lat: Maybe<string | number>;
+  lng: Maybe<string | number>;
+}
+
+export interface ManualGeoLocation3D extends ManualGeoLocation {
+  alt: Maybe<string | number>;
+}
+
 export interface GeoLocationMeasured extends GeoLocation {
   accuracy: Maybe<number>;
 }
