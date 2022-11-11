@@ -18,6 +18,7 @@ import type {
   ManualGeoLocation,
   MapMarker,
 } from "../../types/location.types";
+import { isNumeric } from "../../utils/typeChecking";
 
 // eslint-disable-next-line unused-imports/no-unused-vars
 const Marker = ({ lat, lng, color }: any) => (
@@ -95,7 +96,7 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
 
   // Updates manual location marker
   useEffect(() => {
-    if (manualLocation.lat !== undefined && manualLocation.lng !== undefined) {
+    if (isNumeric(manualLocation.lat) && isNumeric(manualLocation.lng)) {
       setManualMarker({
         pin: {
           lat: manualLocation.lat,
