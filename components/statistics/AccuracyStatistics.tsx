@@ -9,7 +9,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { Maybe } from "../../types/generic.types";
-import { GeoLocation3D } from "../../types/location.types";
+import { GeoLocation3D, ManualGeoLocation3D } from "../../types/location.types";
 import { StatsError } from "../../types/statistics.types";
 import {
   calculateDistance,
@@ -19,12 +19,12 @@ import {
 
 interface Props {
   userLocation: Maybe<GeoLocation3D>;
-  manualLocation: Maybe<GeoLocation3D>;
+  manualLocation: ManualGeoLocation3D;
 }
 
 const AccuracyStatistics = ({ userLocation, manualLocation }: Props) => {
   const stats =
-    userLocation && manualLocation
+    userLocation !== undefined
       ? {
           errors: {
             lat: calculateError(userLocation.lat, manualLocation.lat),

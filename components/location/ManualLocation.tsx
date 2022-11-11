@@ -5,35 +5,21 @@ import {
   NumberInput,
   NumberInputField,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { Maybe } from "../../types/generic.types";
-import { GeoLocation3D } from "../../types/location.types";
+import { ManualGeoLocation3D } from "../../types/location.types";
 
 interface Props {
-  location?: GeoLocation3D;
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  onChange?: (newLocation: GeoLocation3D) => any;
+  location?: ManualGeoLocation3D;
+  onChangeLat: (_: string) => any;
+  onChangeLng: (_: string) => any;
+  onChangeAlt: (_: string) => any;
 }
 
-const ManualLocation = ({ location, onChange }: Props) => {
-  const [lat, setLat] = useState<Maybe<number>>(location?.lat || undefined);
-  const [lng, setLng] = useState<Maybe<number>>(location?.lng || undefined);
-  const [alt, setAlt] = useState<Maybe<number>>(location?.alt || undefined);
-
-  useEffect(() => {
-    if (location === undefined) return;
-    if (location.lat !== undefined) setLat(location.lat);
-    if (location.lng !== undefined) setLng(location.lng);
-    if (location.alt !== undefined) setAlt(location.alt);
-  }, [location]);
-
-  useEffect(() => {
-    onChange &&
-      lat !== undefined &&
-      lng !== undefined &&
-      onChange({ lat, lng, alt });
-  }, [lat, lng, alt, onChange]);
-
+const ManualLocation = ({
+  location,
+  onChangeLat,
+  onChangeLng,
+  onChangeAlt,
+}: Props) => {
   return (
     <Box my={3} shadow="md" borderRadius="8px" overflow="hidden">
       <Heading px={5} py={2} size="md" bg="purple.100">
@@ -50,13 +36,22 @@ const ManualLocation = ({ location, onChange }: Props) => {
         w="100%"
         gap="10px"
       >
-        <NumberInput value={lat} onChange={(s) => setLat(Number(s))}>
+        <NumberInput
+          value={location?.lat || ""}
+          onChange={(s) => onChangeLat(s)}
+        >
           <NumberInputField placeholder="Latitude" w="auto" />
         </NumberInput>
-        <NumberInput value={lng} onChange={(s) => setLng(Number(s))}>
+        <NumberInput
+          value={location?.lng || ""}
+          onChange={(s) => onChangeLng(s)}
+        >
           <NumberInputField placeholder="Longitude" w="auto" />
         </NumberInput>
-        <NumberInput value={alt} onChange={(s) => setAlt(Number(s))}>
+        <NumberInput
+          value={location?.alt || ""}
+          onChange={(s) => onChangeAlt(s)}
+        >
           <NumberInputField placeholder="Altitude" w="auto" />
         </NumberInput>
       </Flex>
