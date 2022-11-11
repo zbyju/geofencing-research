@@ -9,9 +9,9 @@ import { ManualGeoLocation3D } from "../../types/location.types";
 
 interface Props {
   location?: ManualGeoLocation3D;
-  onChangeLat: (_: string) => any;
-  onChangeLng: (_: string) => any;
-  onChangeAlt: (_: string) => any;
+  onChangeLat: (_: string | number) => any;
+  onChangeLng: (_: string | number) => any;
+  onChangeAlt: (_: string | number) => any;
 }
 
 const ManualLocation = ({

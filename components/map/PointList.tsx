@@ -15,7 +15,7 @@ interface Props {
   geofence: GeofencePoint[];
   newPoint: Maybe<GeoLocation>;
   onAdd: () => any;
-  onRemove?: (id: string) => any;
+  onRemove?: (_: string) => any;
 }
 
 const PointList = ({ geofence, newPoint, onAdd, onRemove }: Props) => {

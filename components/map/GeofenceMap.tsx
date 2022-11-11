@@ -29,7 +29,7 @@ interface Props {
   onClick: (location: GeoLocation) => any;
 }
 
-const GeofenceMap = ({ userLocation, geofence, onClick }: Props) => {
+const GeofenceMap = ({ userLocation }: Props) => {
   const [userMarker, setUserMarker] = useState<Maybe<MapMarker>>(undefined);
   const [geopoints, setGeopoints] = useState<GeofencePoint[]>([]);
   const [polygon, setPolygon] = useState<any>(undefined);
