@@ -1,4 +1,3 @@
-import { TriangleDownIcon } from "@chakra-ui/icons";
 import { Box, Heading } from "@chakra-ui/react";
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
@@ -12,11 +11,7 @@ import type {
   MapMarker,
 } from "../../types/location.types";
 import PointList from "./PointList";
-
-// eslint-disable-next-line unused-imports/no-unused-vars
-const Marker = ({ lat, lng, color }: any) => (
-  <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
-);
+import Marker from "./Marker";
 
 const MapErrorFallback = () => {
   return <Heading>There has been an error, when loading the map.</Heading>;
@@ -143,6 +138,15 @@ const GeofenceMap = ({ userLocation }: Props) => {
             {newPoint !== undefined && (
               <Marker lat={newPoint.lat} lng={newPoint.lng} color="purple" />
             )}
+            {geopoints.map((g) => (
+              <Marker
+                lat={g.lat}
+                lng={g.lng}
+                color="purple"
+                key={g.id}
+                size="sm"
+              />
+            ))}
           </GoogleMapReact>
           <PointList
             geofence={geopoints}

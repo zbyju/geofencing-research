@@ -1,4 +1,4 @@
-import { TriangleDownIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -19,11 +19,7 @@ import type {
   MapMarker,
 } from "../../types/location.types";
 import { isNumeric } from "../../utils/typeChecking";
-
-// eslint-disable-next-line unused-imports/no-unused-vars
-const Marker = ({ lat, lng, color }: any) => (
-  <TriangleDownIcon color={color} ml="-20px" mt="-40px" boxSize="10" />
-);
+import Marker from "./Marker";
 
 const MapErrorFallback = () => {
   return <Heading>There has been an error, when loading the map.</Heading>;
