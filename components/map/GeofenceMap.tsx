@@ -59,7 +59,7 @@ const GeofenceMap = ({ userLocation }: Props) => {
     );
   };
 
-  const handleHoverEnd = (id: string) => {
+  const handleHoverEnd = (_: string) => {
     setGeopoints(
       geopoints.map((g) => {
         return { ...g, hovered: false };
