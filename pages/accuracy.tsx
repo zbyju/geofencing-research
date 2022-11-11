@@ -51,13 +51,13 @@ const Accuracy: NextPage = () => {
     setManualLocation({ ...location, alt: undefined });
   }
 
-  function handleManualLocationChangeLat(lat: number) {
+  function handleManualLocationChangeLat(lat: string | number) {
     setManualLocation({ ...manualLocation, lat });
   }
-  function handleManualLocationChangeLng(lng: number) {
+  function handleManualLocationChangeLng(lng: string | number) {
     setManualLocation({ ...manualLocation, lng });
   }
-  function handleManualLocationChangeAlt(alt: number) {
+  function handleManualLocationChangeAlt(alt: string | number) {
     setManualLocation({ ...manualLocation, alt });
   }
 
