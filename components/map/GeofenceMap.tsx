@@ -22,8 +22,11 @@ const MapErrorFallback = () => {
 };
 
 interface Props {
+  // Location of the user
   userLocation: Maybe<GeoLocationMeasured>;
+  // Geofence information {points: [], active: boolean}
   geofence: Geofence;
+  // Events get emmited
   onAddPoint: (_: Maybe<GeoLocation>) => any;
   onRemovePoint: (_: string) => any;
   onHoverStartPoint: (_: string) => any;
@@ -38,14 +41,19 @@ const GeofenceMap = ({
   onHoverStartPoint,
   onHoverEndPoint,
 }: Props) => {
+  // Holds information about the pin and accuracy circle around user's location
   const [userMarker, setUserMarker] = useState<Maybe<MapMarker>>(undefined);
+  // Hold information about the polygon displayed on the map
   const [polygon, setPolygon] = useState<any>(undefined);
+  // New point to be added from the form
   const [newPoint, setNewPoint] = useState<Maybe<GeoLocation>>(undefined);
+  // Objects for controlling the google map
   const [googleMaps, setGoogleMaps] = useState<any | null>({
     map: undefined,
     maps: undefined,
   });
 
+  // Rerender the polygon when it updates
   useEffect(() => {
     if (googleMaps && polygon) {
       polygon.setMap(null);
@@ -77,11 +85,11 @@ const GeofenceMap = ({
     zoom: 12,
   };
 
+  // Save the google maps objects for later use
   const apiIsLoaded = (map: any, maps: any) => {
     setGoogleMaps({ map, maps });
   };
 
-  // Centers map when user location changes
   // Updates user marker and accuracy circle when location changes
   useEffect(() => {
     if (googleMaps.map && googleMaps.maps && userLocation) {
@@ -108,6 +116,7 @@ const GeofenceMap = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, googleMaps]);
 
+  // Handling clicking on the map
   function handleClick(e: ClickEventValue) {
     setNewPoint({
       lat: e.lat,

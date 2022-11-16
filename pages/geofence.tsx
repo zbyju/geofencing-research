@@ -11,13 +11,16 @@ import type {
 import { v4 as uuid } from "uuid";
 
 const Accuracy: NextPage = () => {
+  // User location
   const [location, setLocation] =
     useState<Maybe<GeoLocationMeasured3D>>(undefined);
+  // Geofence { points: [], active: bool }
   const [geofence, setGeofence] = useState<Geofence>({
     points: [],
     active: false,
   });
 
+  // Handling adding a point to geofence
   const handleAddPoint = (newPoint: Maybe<GeoLocation>) => {
     if (newPoint === undefined) return;
     const id = uuid();
@@ -27,6 +30,7 @@ const Accuracy: NextPage = () => {
     });
   };
 
+  // Handling removing a point from geofence based on id
   const handleRemovePoint = (id: string) => {
     setGeofence({
       points: geofence.points.filter((p) => p.id !== id),
@@ -34,6 +38,7 @@ const Accuracy: NextPage = () => {
     });
   };
 
+  // Handling hovering over a point in geofence
   const handleHoverStartPoint = (id: string) => {
     setGeofence({
       points: geofence.points.map((g) => {
@@ -44,6 +49,7 @@ const Accuracy: NextPage = () => {
     });
   };
 
+  // Handling stopping hovering over a point
   const handleHoverEndPoint = (_: string) => {
     setGeofence({
       points: geofence.points.map((p) => {
@@ -53,6 +59,7 @@ const Accuracy: NextPage = () => {
     });
   };
 
+  // Updates user's location
   const refreshLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -75,6 +82,7 @@ const Accuracy: NextPage = () => {
     }
   };
 
+  // On load
   useEffect(() => {
     refreshLocation();
   }, []);
