@@ -12,22 +12,10 @@ const PointForm = ({ location, onAdd }: Props) => {
     <>
       <Flex direction="row" gap="5px" wrap="wrap">
         <Flex direction="row" wrap="wrap" gap="5px" m="auto">
-          <NumberInput
-            value={location?.lat || ""}
-            isReadOnly
-            bg="gray.100"
-            m="auto"
-            maxW="50%"
-          >
+          <NumberInput value={location?.lat || ""} isReadOnly bg="gray.100" m="auto" maxW="50%">
             <NumberInputField placeholder="Latitude" w="100%" />
           </NumberInput>
-          <NumberInput
-            value={location?.lng || ""}
-            isReadOnly
-            bg="gray.100"
-            m="auto"
-            maxW="50%"
-          >
+          <NumberInput value={location?.lng || ""} isReadOnly bg="gray.100" m="auto" maxW="50%">
             <NumberInputField placeholder="Longitude" w="100%" />
           </NumberInput>
         </Flex>

@@ -4,16 +4,12 @@ import { useEffect, useState } from "react";
 import GeofenceMap from "../components/map/GeofenceMap";
 import type { Maybe } from "../types/generic.types";
 import { Geofence } from "../types/geofence.types";
-import type {
-  GeoLocation,
-  GeoLocationMeasured3D,
-} from "../types/location.types";
+import type { GeoLocation, GeoLocationMeasured3D } from "../types/location.types";
 import { v4 as uuid } from "uuid";
 
 const Accuracy: NextPage = () => {
   // User location
-  const [location, setLocation] =
-    useState<Maybe<GeoLocationMeasured3D>>(undefined);
+  const [location, setLocation] = useState<Maybe<GeoLocationMeasured3D>>(undefined);
   // Geofence { points: [], active: bool }
   const [geofence, setGeofence] = useState<Geofence>({
     points: [],
@@ -75,7 +71,7 @@ const Accuracy: NextPage = () => {
         (error) => {
           alert(error.message);
         },
-        { maximumAge: 10000, timeout: 5000, enableHighAccuracy: true }
+        { maximumAge: 10000, timeout: 5000, enableHighAccuracy: true },
       );
     } else {
       console.log("Geo not available");

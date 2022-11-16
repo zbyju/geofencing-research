@@ -11,11 +11,7 @@ import {
 import { Maybe } from "../../types/generic.types";
 import { GeoLocation3D, ManualGeoLocation3D } from "../../types/location.types";
 import { StatsError } from "../../types/statistics.types";
-import {
-  calculateDistance,
-  calculateDistance3D,
-  calculateError,
-} from "../../utils/statistics";
+import { calculateDistance, calculateDistance3D, calculateError } from "../../utils/statistics";
 
 interface Props {
   userLocation: Maybe<GeoLocation3D>;

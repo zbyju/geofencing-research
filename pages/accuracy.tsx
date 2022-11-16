@@ -13,8 +13,7 @@ import type {
 } from "../types/location.types";
 
 const Accuracy: NextPage = () => {
-  const [location, setLocation] =
-    useState<Maybe<GeoLocationMeasured3D>>(undefined);
+  const [location, setLocation] = useState<Maybe<GeoLocationMeasured3D>>(undefined);
   const [manualLocation, setManualLocation] = useState<ManualGeoLocation3D>({
     lat: undefined,
     lng: undefined,
@@ -36,7 +35,7 @@ const Accuracy: NextPage = () => {
         (error) => {
           alert(error.message);
         },
-        { maximumAge: 10000, timeout: 5000, enableHighAccuracy: true }
+        { maximumAge: 10000, timeout: 5000, enableHighAccuracy: true },
       );
     } else {
       console.log("Geo not available");
@@ -70,20 +69,14 @@ const Accuracy: NextPage = () => {
           onClick={handleMapClick}
         />
         <Box px={10}>
-          <CurrentLocation
-            location={location}
-            onLocationRefresh={refreshLocation}
-          />
+          <CurrentLocation location={location} onLocationRefresh={refreshLocation} />
           <ManualLocation
             location={manualLocation}
             onChangeLat={handleManualLocationChangeLat}
             onChangeLng={handleManualLocationChangeLng}
             onChangeAlt={handleManualLocationChangeAlt}
           />
-          <AccuracyStatistics
-            userLocation={location}
-            manualLocation={manualLocation}
-          />
+          <AccuracyStatistics userLocation={location} manualLocation={manualLocation} />
         </Box>
       </Flex>
     </Box>

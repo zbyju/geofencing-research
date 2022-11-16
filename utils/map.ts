@@ -1,15 +1,10 @@
 import { Maybe } from "../types/generic.types";
-import {
-  GeoLocation,
-  GeoLocationMeasured,
-  LocationPin,
-  MapMarker,
-} from "../types/location.types";
+import { GeoLocation, GeoLocationMeasured, MapMarker } from "../types/location.types";
 
 export const locationToMarker = (
   googleMaps: any,
   l: GeoLocationMeasured | GeoLocation | undefined,
-  color: string
+  color: string,
 ): Maybe<MapMarker> => {
   if (l === undefined) return undefined;
   let acc = undefined;
@@ -32,18 +27,12 @@ export const locationToMarker = (
   };
 };
 
-export const isMarkerCorrect = (
-  l: Maybe<GeoLocation>,
-  m: MapMarker
-): boolean => {
+export const isMarkerCorrect = (l: Maybe<GeoLocation>, m: MapMarker): boolean => {
   if (l === undefined) return false;
   return l.lat === m.pin.lat && l.lng === m.pin.lng;
 };
 
-export const isMarkerDrawn = (
-  l: Maybe<GeoLocation>,
-  markers: MapMarker[]
-): boolean => {
+export const isMarkerDrawn = (l: Maybe<GeoLocation>, markers: MapMarker[]): boolean => {
   if (l === undefined) false;
   return markers.findIndex((m) => isMarkerCorrect(l, m)) !== -1;
 };

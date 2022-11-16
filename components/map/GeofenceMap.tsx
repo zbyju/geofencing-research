@@ -4,11 +4,7 @@ import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Maybe } from "../../types/generic.types";
 import { Geofence } from "../../types/geofence.types";
-import type {
-  GeoLocation,
-  GeoLocationMeasured,
-  MapMarker,
-} from "../../types/location.types";
+import type { GeoLocation, GeoLocationMeasured, MapMarker } from "../../types/location.types";
 import PointList from "./PointList";
 import Marker from "./Marker";
 import {
@@ -146,27 +142,12 @@ const GeofenceMap = ({
               />
             )}
             {newPoint !== undefined && (
-              <Marker
-                lat={newPoint.lat}
-                lng={newPoint.lng}
-                color={fenceLocationColor}
-              />
+              <Marker lat={newPoint.lat} lng={newPoint.lng} color={fenceLocationColor} />
             )}
             {geofence.points.map((g) => {
-              const color =
-                g.hovered === true
-                  ? fenceLocationHoverColor
-                  : fenceLocationColor;
+              const color = g.hovered === true ? fenceLocationHoverColor : fenceLocationColor;
               const size = g.hovered === true ? "md" : "sm";
-              return (
-                <Marker
-                  lat={g.lat}
-                  lng={g.lng}
-                  color={color}
-                  key={g.id}
-                  size={size}
-                />
-              );
+              return <Marker lat={g.lat} lng={g.lng} color={color} key={g.id} size={size} />;
             })}
           </GoogleMapReact>
           <PointList

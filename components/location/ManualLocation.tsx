@@ -1,10 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  NumberInput,
-  NumberInputField,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, NumberInput, NumberInputField } from "@chakra-ui/react";
 import { ManualGeoLocation3D } from "../../types/location.types";
 
 interface Props {
@@ -14,12 +8,7 @@ interface Props {
   onChangeAlt: (_: string | number) => any;
 }
 
-const ManualLocation = ({
-  location,
-  onChangeLat,
-  onChangeLng,
-  onChangeAlt,
-}: Props) => {
+const ManualLocation = ({ location, onChangeLat, onChangeLng, onChangeAlt }: Props) => {
   return (
     <Box my={3} shadow="md" borderRadius="8px" overflow="hidden">
       <Heading px={5} py={2} size="md" bg="purple.100">
@@ -36,22 +25,13 @@ const ManualLocation = ({
         w="100%"
         gap="10px"
       >
-        <NumberInput
-          value={location?.lat || ""}
-          onChange={(s) => onChangeLat(s)}
-        >
+        <NumberInput value={location?.lat || ""} onChange={(s) => onChangeLat(s)}>
           <NumberInputField placeholder="Latitude" w="auto" />
         </NumberInput>
-        <NumberInput
-          value={location?.lng || ""}
-          onChange={(s) => onChangeLng(s)}
-        >
+        <NumberInput value={location?.lng || ""} onChange={(s) => onChangeLng(s)}>
           <NumberInputField placeholder="Longitude" w="auto" />
         </NumberInput>
-        <NumberInput
-          value={location?.alt || ""}
-          onChange={(s) => onChangeAlt(s)}
-        >
+        <NumberInput value={location?.alt || ""} onChange={(s) => onChangeAlt(s)}>
           <NumberInputField placeholder="Altitude" w="auto" />
         </NumberInput>
       </Flex>

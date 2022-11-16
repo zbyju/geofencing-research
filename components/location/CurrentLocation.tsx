@@ -49,25 +49,18 @@ const CurrentLocation = ({ location, onLocationRefresh }: Props) => {
           </Stat>
           <Stat>
             <StatLabel>Accuracy</StatLabel>
-            <StatNumber>
-              {location.accuracy?.toFixed(2) || "Unknown"}
-            </StatNumber>
+            <StatNumber>{location.accuracy?.toFixed(2) || "Unknown"}</StatNumber>
           </Stat>
           <Stat>
             <StatLabel>Accuracy altitude</StatLabel>
-            <StatNumber>
-              {location.accuracyAlt?.toFixed(2) || "Unknown"}
-            </StatNumber>
+            <StatNumber>{location.accuracyAlt?.toFixed(2) || "Unknown"}</StatNumber>
           </Stat>
         </Flex>
       ) : (
         <Text>Unknown location</Text>
       )}
       <Flex direction="row" wrap="wrap" px={5} py={2}>
-        <Button
-          onClick={onLocationRefresh}
-          leftIcon={<Icon as={GrFormRefresh} w={5} h={5} />}
-        >
+        <Button onClick={onLocationRefresh} leftIcon={<Icon as={GrFormRefresh} w={5} h={5} />}>
           Refresh
         </Button>
       </Flex>

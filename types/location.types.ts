@@ -28,9 +28,7 @@ export interface GeoLocationMeasured extends GeoLocation {
 }
 
 // Measured 3D have a separate accuracy for altitude
-export interface GeoLocationMeasured3D
-  extends GeoLocation3D,
-    GeoLocationMeasured {
+export interface GeoLocationMeasured3D extends GeoLocation3D, GeoLocationMeasured {
   accuracyAlt: Maybe<number>;
 }
 
