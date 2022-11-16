@@ -1,13 +1,5 @@
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  FormLabel,
-  Heading,
-  Icon,
-  Switch,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, FormLabel, Heading, Icon, Switch } from "@chakra-ui/react";
 import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -69,8 +61,7 @@ const LocationMap = ({ userLocation, manualLocation, onClick }: Props) => {
       if (shouldChangeCenter && userLocation !== undefined) {
         changeCenter(userLocation);
       }
-      if (userMarker?.accuracyCircle !== undefined)
-        userMarker.accuracyCircle.setMap(null);
+      if (userMarker?.accuracyCircle !== undefined) userMarker.accuracyCircle.setMap(null);
       setUserMarker({
         pin: { ...userLocation, color: userLocationColor },
         accuracyCircle:

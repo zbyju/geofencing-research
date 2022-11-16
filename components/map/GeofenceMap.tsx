@@ -3,13 +3,8 @@ import GoogleMapReact, { ClickEventValue } from "google-map-react";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Maybe } from "../../types/generic.types";
-import { Geofence, GeofencePoint } from "../../types/geofence.types";
-import { v4 as uuid } from "uuid";
-import type {
-  GeoLocation,
-  GeoLocationMeasured,
-  MapMarker,
-} from "../../types/location.types";
+import { Geofence } from "../../types/geofence.types";
+import type { GeoLocation, GeoLocationMeasured, MapMarker } from "../../types/location.types";
 import PointList from "./PointList";
 import Marker from "./Marker";
 import {
@@ -23,58 +18,46 @@ const MapErrorFallback = () => {
 };
 
 interface Props {
+  // Location of the user
   userLocation: Maybe<GeoLocationMeasured>;
-  geofence: Maybe<Geofence>;
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  onClick: (location: GeoLocation) => any;
+  // Geofence information {points: [], active: boolean}
+  geofence: Geofence;
+  // Events get emmited
+  onAddPoint: (_: Maybe<GeoLocation>) => any;
+  onRemovePoint: (_: string) => any;
+  onHoverStartPoint: (_: string) => any;
+  onHoverEndPoint: (_: string) => any;
 }
 
-const GeofenceMap = ({ userLocation }: Props) => {
+const GeofenceMap = ({
+  userLocation,
+  geofence,
+  onAddPoint,
+  onRemovePoint,
+  onHoverStartPoint,
+  onHoverEndPoint,
+}: Props) => {
+  // Holds information about the pin and accuracy circle around user's location
   const [userMarker, setUserMarker] = useState<Maybe<MapMarker>>(undefined);
-  const [geopoints, setGeopoints] = useState<GeofencePoint[]>([]);
+  // Hold information about the polygon displayed on the map
   const [polygon, setPolygon] = useState<any>(undefined);
+  // New point to be added from the form
   const [newPoint, setNewPoint] = useState<Maybe<GeoLocation>>(undefined);
+  // Objects for controlling the google map
   const [googleMaps, setGoogleMaps] = useState<any | null>({
     map: undefined,
     maps: undefined,
   });
 
-  const handleAdd = () => {
-    if (newPoint === undefined) return;
-    const id = uuid();
-    setGeopoints(geopoints.concat({ ...newPoint, id }));
-    setNewPoint(undefined);
-  };
-
-  const handleRemove = (id: string) => {
-    setGeopoints(geopoints.filter((p) => p.id !== id));
-  };
-
-  const handleHoverStart = (id: string) => {
-    setGeopoints(
-      geopoints.map((g) => {
-        const hovered = g.id === id;
-        return { ...g, hovered: hovered };
-      })
-    );
-  };
-
-  const handleHoverEnd = (_: string) => {
-    setGeopoints(
-      geopoints.map((g) => {
-        return { ...g, hovered: false };
-      })
-    );
-  };
-
+  // Rerender the polygon when it updates
   useEffect(() => {
     if (googleMaps && polygon) {
       polygon.setMap(null);
     }
-    if (googleMaps && geopoints.length > 2) {
-      const path = geopoints
+    if (googleMaps && geofence.points.length > 2) {
+      const path = geofence.points
         .map((p) => ({ lat: p.lat, lng: p.lng }))
-        .concat(geopoints[0]);
+        .concat(geofence.points[0]);
       const poly = new googleMaps.maps.Polygon({
         paths: path,
         strokeColor: fenceLocationColor,
@@ -87,7 +70,7 @@ const GeofenceMap = ({ userLocation }: Props) => {
       poly.setMap(googleMaps.map);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [googleMaps, geopoints]);
+  }, [googleMaps, geofence.points]);
 
   // Default props for the map component
   const defaultProps = {
@@ -98,11 +81,11 @@ const GeofenceMap = ({ userLocation }: Props) => {
     zoom: 12,
   };
 
+  // Save the google maps objects for later use
   const apiIsLoaded = (map: any, maps: any) => {
     setGoogleMaps({ map, maps });
   };
 
-  // Centers map when user location changes
   // Updates user marker and accuracy circle when location changes
   useEffect(() => {
     if (googleMaps.map && googleMaps.maps && userLocation) {
@@ -129,6 +112,7 @@ const GeofenceMap = ({ userLocation }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, googleMaps]);
 
+  // Handling clicking on the map
   function handleClick(e: ClickEventValue) {
     setNewPoint({
       lat: e.lat,
@@ -158,36 +142,24 @@ const GeofenceMap = ({ userLocation }: Props) => {
               />
             )}
             {newPoint !== undefined && (
-              <Marker
-                lat={newPoint.lat}
-                lng={newPoint.lng}
-                color={fenceLocationColor}
-              />
+              <Marker lat={newPoint.lat} lng={newPoint.lng} color={fenceLocationColor} />
             )}
-            {geopoints.map((g) => {
-              const color =
-                g.hovered === true
-                  ? fenceLocationHoverColor
-                  : fenceLocationColor;
+            {geofence.points.map((g) => {
+              const color = g.hovered === true ? fenceLocationHoverColor : fenceLocationColor;
               const size = g.hovered === true ? "md" : "sm";
-              return (
-                <Marker
-                  lat={g.lat}
-                  lng={g.lng}
-                  color={color}
-                  key={g.id}
-                  size={size}
-                />
-              );
+              return <Marker lat={g.lat} lng={g.lng} color={color} key={g.id} size={size} />;
             })}
           </GoogleMapReact>
           <PointList
-            geofence={geopoints}
+            geofence={geofence.points}
             newPoint={newPoint}
-            onAdd={handleAdd}
-            onRemove={handleRemove}
-            onHoverStart={handleHoverStart}
-            onHoverEnd={handleHoverEnd}
+            onAdd={() => {
+              onAddPoint(newPoint);
+              setNewPoint(undefined);
+            }}
+            onRemove={onRemovePoint}
+            onHoverStart={onHoverStartPoint}
+            onHoverEnd={onHoverEndPoint}
           />
         </Box>
       </ErrorBoundary>

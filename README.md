@@ -33,5 +33,7 @@ yarn dev
 
 Others:
 
+- [ESLint](https://github.com/eslint/eslint)
+- [Prettier](https://github.com/prettier/prettier)
 - [react-google-maps](https://www.npmjs.com/package/google-map-react)
 - [react-error-boundary](https://www.npmjs.com/package/react-error-boundary?activeTab=dependencies)

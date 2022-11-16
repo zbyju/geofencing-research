@@ -11,12 +11,10 @@ const { greatCircleDistance } = require("great-circle-distance");
 
 export function calculateError(
   u: Maybe<number>,
-  l: Maybe<number | string>
+  l: Maybe<number | string>,
 ): StatsError | undefined {
-  console.log(l, isNumeric(l));
   if (u === undefined || l === undefined || !isNumeric(l)) return undefined;
   l = Number(l);
-  console.log(l);
   const absolute = u - l;
   const type: "increase" | "decrease" | undefined =
     absolute > 0 ? "increase" : absolute < 0 ? "decrease" : undefined;
@@ -32,10 +30,7 @@ export function calculateError(
   };
 }
 
-export function calculateDistance(
-  u: GeoLocation,
-  l: ManualGeoLocation
-): Maybe<number> {
+export function calculateDistance(u: GeoLocation, l: ManualGeoLocation): Maybe<number> {
   if (!isNumeric(l.lat) || !isNumeric(l.lng)) return undefined;
   return (
     greatCircleDistance({
@@ -47,10 +42,7 @@ export function calculateDistance(
   );
 }
 
-export function calculateDistance3D(
-  u: GeoLocation3D,
-  l: ManualGeoLocation3D
-): Maybe<number> {
+export function calculateDistance3D(u: GeoLocation3D, l: ManualGeoLocation3D): Maybe<number> {
   if (
     u === undefined ||
     l === undefined ||
