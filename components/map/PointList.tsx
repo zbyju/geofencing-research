@@ -25,10 +25,10 @@ const PointList = ({ geofence, newPoint, onAdd, onRemove, onHoverStart, onHoverE
               return (
                 <Flex direction="row" gap="5px" wrap="wrap" key={p.id}>
                   <Flex direction="row" gap="5px" wrap="wrap" m="auto">
-                    <NumberInput value={p.lat} isReadOnly m="auto" bg="gray.100">
-                      <NumberInputField placeholder="Latitude" w="100%" />
+                    <NumberInput value={p.lat} m="auto" bg="gray.100" color="gray.600">
+                      <NumberInputField placeholder="Latitude" />
                     </NumberInput>
-                    <NumberInput value={p.lng} isReadOnly m="auto" bg="gray.100">
+                    <NumberInput value={p.lng} m="auto" bg="gray.100" color="gray.600">
                       <NumberInputField placeholder="Longitude" w="100%" />
                     </NumberInput>
                   </Flex>
