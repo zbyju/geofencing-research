@@ -69,17 +69,17 @@ describe("isUserInGeofence", () => {
   });
 
   test("recognizes when user is outside geofence", () => {
-    expect(isUserInGeofence(userLocation2, geofence1)).toBe(true);
-    expect(isUserInGeofence(userLocation3, geofence1)).toBe(true);
-    expect(isUserInGeofence(userLocation4, geofence1)).toBe(true);
+    expect(isUserInGeofence(userLocation2, geofence1)).toBe(false);
+    expect(isUserInGeofence(userLocation3, geofence1)).toBe(false);
+    expect(isUserInGeofence(userLocation4, geofence1)).toBe(false);
 
-    expect(isUserInGeofence(userLocation4, geofence2)).toBe(true);
-    expect(isUserInGeofence(userLocation1, geofence2)).toBe(true);
-    expect(isUserInGeofence(userLocation2, geofence2)).toBe(true);
+    expect(isUserInGeofence(userLocation4, geofence2)).toBe(false);
+    expect(isUserInGeofence(userLocation1, geofence2)).toBe(false);
+    expect(isUserInGeofence(userLocation2, geofence2)).toBe(false);
   });
 
   test("returns false for non-polygons geofences", () => {
-    expect(isUserInGeofence(userLocation1, []));
+    expect(isUserInGeofence(userLocation1, [])).toBe(false);
     expect(
       isUserInGeofence(userLocation1, [
         {
@@ -88,7 +88,7 @@ describe("isUserInGeofence", () => {
           lng: 24.833957071317254,
         },
       ]),
-    );
+    ).toBe(false);
     expect(
       isUserInGeofence(userLocation1, [
         {
@@ -102,6 +102,6 @@ describe("isUserInGeofence", () => {
           lng: 24.835512752545892,
         },
       ]),
-    );
+    ).toBe(false);
   });
 });
