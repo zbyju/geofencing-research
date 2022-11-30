@@ -6,8 +6,35 @@ export function isUserInGeofence(location: GeoLocation, geopoints: GeofencePoint
   // TODO: Implement detecting if the user is in geofence
   if (geopoints.length < 3) return false;
 
-  console.log(location, geopoints);
-  return false;
+
+  var a = false;
+  var counter = 0;
+
+  var j = geopoints.length-1;
+  for(var i = 0 ; i<geopoints.length; i++){
+    
+
+
+
+    console.log(geopoints[i],((geopoints[i].lng > location.lng)!= (geopoints[j].lng > location.lng)),(location.lat < (geopoints[j].lat -  geopoints[i].lat) * ( location.lng -geopoints[i].lng) / (geopoints[j].lng - geopoints[i].lng) + geopoints[i].lat ));
+    
+    
+    
+    if ( ((geopoints[i].lng > location.lng)!= (geopoints[j].lng > location.lng)) && 
+    (location.lat < (geopoints[j].lat -  geopoints[i].lat) * ( location.lng -geopoints[i].lng) / (geopoints[j].lng - geopoints[i].lng) + geopoints[i].lat )  ){
+      
+      
+
+
+      a = !a;
+    counter = counter +1;
+    }
+    j = i;
+  }
+  //console.log(location, geopoints);
+  console.log(a,counter);
+  console.log("RESS->");
+  return a;
 }
 
 export function findEntryPointGeofence(

@@ -68,14 +68,17 @@ describe("isUserInGeofence", () => {
     expect(isUserInGeofence(userLocation3, geofence2)).toBe(true);
   });
 
-  test("recognizes when user is outside geofence", () => {
-    expect(isUserInGeofence(userLocation2, geofence1)).toBe(true);
-    expect(isUserInGeofence(userLocation3, geofence1)).toBe(true);
-    expect(isUserInGeofence(userLocation4, geofence1)).toBe(true);
 
-    expect(isUserInGeofence(userLocation4, geofence2)).toBe(true);
-    expect(isUserInGeofence(userLocation1, geofence2)).toBe(true);
-    expect(isUserInGeofence(userLocation2, geofence2)).toBe(true);
+
+  // --- > Was toBe(true); Not sure if it was meant to be ? 
+  test("recognizes when user is outside geofence", () => {
+    expect(isUserInGeofence(userLocation2, geofence1)).toBe(false);
+    expect(isUserInGeofence(userLocation3, geofence1)).toBe(false);
+    expect(isUserInGeofence(userLocation4, geofence1)).toBe(false);
+
+    expect(isUserInGeofence(userLocation4, geofence2)).toBe(false);
+    expect(isUserInGeofence(userLocation1, geofence2)).toBe(false);
+    expect(isUserInGeofence(userLocation2, geofence2)).toBe(false);
   });
 
   test("returns false for non-polygons geofences", () => {
@@ -96,6 +99,7 @@ describe("isUserInGeofence", () => {
           lat: 60.186265611756525,
           lng: 24.833957071317254,
         },
+
         {
           id: "2",
           lat: 60.186260277572345,
