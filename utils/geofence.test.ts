@@ -82,7 +82,7 @@ describe("isUserInGeofence", () => {
   });
 
   test("returns false for non-polygons geofences", () => {
-    expect(isUserInGeofence(userLocation1, []));
+    expect(isUserInGeofence(userLocation1, [])).toBe(false);
     expect(
       isUserInGeofence(userLocation1, [
         {
@@ -91,7 +91,7 @@ describe("isUserInGeofence", () => {
           lng: 24.833957071317254,
         },
       ]),
-    );
+    ).toBe(false);
     expect(
       isUserInGeofence(userLocation1, [
         {
@@ -106,6 +106,6 @@ describe("isUserInGeofence", () => {
           lng: 24.835512752545892,
         },
       ]),
-    );
+    ).toBe(false);
   });
 });
