@@ -12,6 +12,7 @@ import {
   fenceLocationHoverColor,
   userLocationColor,
 } from "../../styles/colors";
+import { findEntryPointGeofence, findExitPointGeofence, isPointInGeofence } from "../../utils/geofence";
 
 const MapErrorFallback = () => {
   return <Heading>There has been an error, when loading the map.</Heading>;
@@ -22,6 +23,7 @@ interface Props {
   userLocation: Maybe<GeoLocationMeasured>;
   // Geofence information {points: [], active: boolean}
   geofence: Geofence;
+  userLocationBuffer: GeoLocation[];
   // Events get emmited
   onAddPoint: (_: Maybe<GeoLocation>) => any;
   onRemovePoint: (_: string) => any;
@@ -32,6 +34,7 @@ interface Props {
 const GeofenceMap = ({
   userLocation,
   geofence,
+  userLocationBuffer,
   onAddPoint,
   onRemovePoint,
   onHoverStartPoint,
@@ -108,6 +111,23 @@ const GeofenceMap = ({
             })
             : undefined,
       });
+
+      const userInGeofence = isPointInGeofence(userLocation, geofence.points);
+      
+      // If the user has just entered the geofence
+      if (userInGeofence && !geofence.active) {
+        const entryPoint = findEntryPointGeofence(userLocationBuffer, geofence.points);
+        geofence.entryPoint = entryPoint;
+      }
+
+      // If the user has just exited the geofence
+      else if (!userInGeofence && geofence.active) {
+        const exitPoint = findExitPointGeofence(userLocationBuffer, geofence.points);
+        geofence.exitPoint = exitPoint;
+      }
+
+      // Update the geofence active status
+      geofence.active = userInGeofence;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, googleMaps]);

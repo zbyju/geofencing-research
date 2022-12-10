@@ -7,6 +7,9 @@ import { Geofence } from "../types/geofence.types";
 import type { GeoLocation, GeoLocationMeasured3D } from "../types/location.types";
 import { v4 as uuid } from "uuid";
 
+// Geolocation buffer length
+const BUFFER_LENGTH = 10;
+
 const Accuracy: NextPage = () => {
   // User location
   const [location, setLocation] = useState<Maybe<GeoLocationMeasured3D>>(undefined);
@@ -14,7 +17,11 @@ const Accuracy: NextPage = () => {
   const [geofence, setGeofence] = useState<Geofence>({
     points: [],
     active: false,
+    entryPoint: undefined,
+    exitPoint: undefined
   });
+  // Buffer of recent user locations
+  const [locationBuffer, setLocationBuffer] = useState<GeoLocationMeasured3D[]>([])
 
   // Handling adding a point to geofence
   const handleAddPoint = (newPoint: Maybe<GeoLocation>) => {
@@ -23,6 +30,8 @@ const Accuracy: NextPage = () => {
     setGeofence({
       points: geofence.points.concat({ ...newPoint, id }),
       active: geofence.active,
+      entryPoint: geofence.entryPoint,
+      exitPoint: geofence.exitPoint
     });
   };
 
@@ -31,6 +40,8 @@ const Accuracy: NextPage = () => {
     setGeofence({
       points: geofence.points.filter((p) => p.id !== id),
       active: geofence.active,
+      entryPoint: geofence.entryPoint,
+      exitPoint: geofence.exitPoint
     });
   };
 
@@ -42,6 +53,8 @@ const Accuracy: NextPage = () => {
         return { ...g, hovered: hovered };
       }),
       active: geofence.active,
+      entryPoint: geofence.entryPoint,
+      exitPoint: geofence.exitPoint
     });
   };
 
@@ -52,6 +65,8 @@ const Accuracy: NextPage = () => {
         return { ...p, hovered: false };
       }),
       active: geofence.active,
+      entryPoint: geofence.entryPoint,
+      exitPoint: geofence.exitPoint
     });
   };
 
@@ -60,13 +75,20 @@ const Accuracy: NextPage = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLocation({
+          const newPosition = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
             alt: position.coords.altitude || undefined,
             accuracy: position.coords.accuracy,
             accuracyAlt: position.coords.altitudeAccuracy || undefined,
-          });
+          }
+          setLocation(newPosition);
+
+          // If the location buffer is full, remove the first entry and add a new one
+          if (locationBuffer.length === BUFFER_LENGTH)
+            setLocationBuffer(locationBuffer.slice(1, locationBuffer.length).concat([newPosition]));
+          else
+            setLocationBuffer(locationBuffer.concat([newPosition]));
         },
         (error) => {
           alert(error.message);
@@ -89,6 +111,7 @@ const Accuracy: NextPage = () => {
         <GeofenceMap
           userLocation={location}
           geofence={geofence}
+          userLocationBuffer={locationBuffer}
           onAddPoint={handleAddPoint}
           onRemovePoint={handleRemovePoint}
           onHoverStartPoint={handleHoverStartPoint}
