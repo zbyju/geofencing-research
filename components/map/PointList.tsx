@@ -11,9 +11,11 @@ interface Props {
   onRemove?: (_: string) => any;
   onHoverStart?: (_: string) => any;
   onHoverEnd?: (_: string) => any;
+  onLatChange: (_: number) => any;
+  onLngChange: (_: number) => any;
 }
 
-const PointList = ({ geofence, newPoint, onAdd, onRemove, onHoverStart, onHoverEnd }: Props) => {
+const PointList = ({ geofence, newPoint, onAdd, onRemove, onHoverStart, onHoverEnd, onLatChange, onLngChange }: Props) => {
   return (
     <>
       <Box boxShadow="md" py={3}>
@@ -46,7 +48,7 @@ const PointList = ({ geofence, newPoint, onAdd, onRemove, onHoverStart, onHoverE
             })
           )}
           <Divider my={1} />
-          <PointForm location={newPoint} onAdd={onAdd} />
+          <PointForm location={newPoint} onAdd={onAdd} onLatChange={onLatChange} onLngChange={onLngChange} />
         </Flex>
       </Box>
     </>
