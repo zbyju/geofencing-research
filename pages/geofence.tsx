@@ -11,6 +11,8 @@ import {
   findExitPointGeofence,
   isPointInGeofence,
 } from "../utils/geofence";
+import GeofenceStatistics from "../components/statistics/GeofenceStatistics";
+import { GeofenceTimes } from "../types/times.types";
 
 // Geolocation buffer length
 const BUFFER_LENGTH = 2;
@@ -29,6 +31,11 @@ const Accuracy: NextPage = () => {
   const [locationBuffer, setLocationBuffer] = useState<GeoLocationMeasured3D[]>([]);
   // User path
   const [path, setPath] = useState<GeoLocationId[]>([]);
+  // Time inside geofence
+  const [times, setTimes] = useState<GeofenceTimes>({
+    start: undefined,
+    end: undefined,
+  });
 
   // Handling adding a point to geofence
   const handleAddPoint = (newPoint: Maybe<GeoLocation>) => {
@@ -119,6 +126,10 @@ const Accuracy: NextPage = () => {
     if (isUserIn && !geofence.active) {
       // User just entered
       const entry = findEntryPointGeofence(newBuffer, geofence.points);
+      setTimes({
+        start: new Date(),
+        end: undefined,
+      });
       setGeofence({
         ...geofence,
         active: true,
@@ -134,6 +145,10 @@ const Accuracy: NextPage = () => {
     } else if (!isUserIn && geofence.active) {
       const exit = findExitPointGeofence(newBuffer, geofence.points);
       // Just exited
+      setTimes({
+        start: times.start,
+        end: new Date(),
+      });
       setGeofence({
         ...geofence,
         active: false,
@@ -161,11 +176,7 @@ const Accuracy: NextPage = () => {
           onHoverStartPoint={handleHoverStartPoint}
           onHoverEndPoint={handleHoverEndPoint}
         />
-        <p>points: {locationBuffer.map((l) => JSON.stringify(l))}</p>
-        <p>len: {locationBuffer.length}</p>
-        <p>is in: {geofence.active ? "true" : "false"}</p>
-        <p>entry: {JSON.stringify(geofence.entryPoint)}</p>
-        <p>exit: {JSON.stringify(geofence.exitPoint)}</p>
+        <GeofenceStatistics userPath={path} times={times} />
       </Flex>
     </Box>
   );
