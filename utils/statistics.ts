@@ -6,8 +6,23 @@ import {
   ManualGeoLocation3D,
 } from "../types/location.types";
 import { StatsError } from "../types/statistics.types";
+import { GeofenceTimes } from "../types/times.types";
 import { isNumeric } from "./typeChecking";
 const { greatCircleDistance } = require("great-circle-distance");
+
+export function calculateDuration(times: GeofenceTimes): Maybe<number> {
+  if (times.start === undefined || times.end === undefined) return undefined;
+  return (times.end.getTime() - times.start.getTime()) / 1000;
+}
+
+export function calculatePathDistance(path: GeoLocation[]): Maybe<number> {
+  if (path.length <= 1) return undefined;
+  return path.reduce((sum: number, p: GeoLocation, i: number, arr: GeoLocation[]) => {
+    if (i === 0) return sum;
+    const distance = calculateDistance(arr[i - 1], p);
+    return sum + (distance ?? 0);
+  }, 0);
+}
 
 export function calculateError(
   u: Maybe<number>,
