@@ -6,6 +6,10 @@ export interface GeoLocation {
   lng: number;
 }
 
+export interface GeoLocationId extends GeoLocation {
+  id: string;
+}
+
 // 3D location
 export interface GeoLocation3D extends GeoLocation {
   alt: Maybe<number>;
