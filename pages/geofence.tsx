@@ -113,8 +113,6 @@ const Accuracy: NextPage = () => {
         ? locationBuffer.slice(1, locationBuffer.length).concat(location)
         : locationBuffer.concat(location);
 
-    console.log(newBuffer.map((p) => isPointInGeofence(p, geofence.points)));
-
     setLocationBuffer(newBuffer);
 
     const isUserIn = isPointInGeofence(location, geofence.points);
