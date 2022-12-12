@@ -12,6 +12,7 @@ import {
   fenceLocationHoverColor,
   userLocationColor,
 } from "../../styles/colors";
+import { findEntryPointGeofence, findExitPointGeofence, isPointInGeofence } from "../../utils/geofence";
 
 const MapErrorFallback = () => {
   return <Heading>There has been an error, when loading the map.</Heading>;
@@ -22,6 +23,7 @@ interface Props {
   userLocation: Maybe<GeoLocationMeasured>;
   // Geofence information {points: [], active: boolean}
   geofence: Geofence;
+  userLocationBuffer: GeoLocation[];
   // Events get emmited
   onAddPoint: (_: Maybe<GeoLocation>) => any;
   onRemovePoint: (_: string) => any;
@@ -32,6 +34,7 @@ interface Props {
 const GeofenceMap = ({
   userLocation,
   geofence,
+  userLocationBuffer,
   onAddPoint,
   onRemovePoint,
   onHoverStartPoint,
@@ -86,7 +89,7 @@ const GeofenceMap = ({
     setGoogleMaps({ map, maps });
   };
 
-  // Updates user marker and accuracy circle when location changes
+  // Updates user marker and accuracy circle, as well as the geofence activity status and entry/exit point when location changes
   useEffect(() => {
     if (googleMaps.map && googleMaps.maps && userLocation) {
       if (userMarker?.accuracyCircle !== undefined) {
@@ -97,17 +100,34 @@ const GeofenceMap = ({
         accuracyCircle:
           userLocation.accuracy !== undefined
             ? new googleMaps.maps.Circle({
-                strokeColor: userLocationColor,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: userLocationColor,
-                fillOpacity: 0.35,
-                map: googleMaps.map,
-                center: { lat: userLocation.lat, lng: userLocation.lng },
-                radius: userLocation.accuracy || 0.01,
-              })
+              strokeColor: userLocationColor,
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: userLocationColor,
+              fillOpacity: 0.35,
+              map: googleMaps.map,
+              center: { lat: userLocation.lat, lng: userLocation.lng },
+              radius: userLocation.accuracy || 0.01,
+            })
             : undefined,
       });
+
+      const userInGeofence = isPointInGeofence(userLocation, geofence.points);
+      
+      // If the user has just entered the geofence
+      if (userInGeofence && !geofence.active) {
+        const entryPoint = findEntryPointGeofence(userLocationBuffer, geofence.points);
+        geofence.entryPoint = entryPoint;
+      }
+
+      // If the user has just exited the geofence
+      else if (!userInGeofence && geofence.active) {
+        const exitPoint = findExitPointGeofence(userLocationBuffer, geofence.points);
+        geofence.exitPoint = exitPoint;
+      }
+
+      // Update the geofence active status
+      geofence.active = userInGeofence;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, googleMaps]);
@@ -117,6 +137,20 @@ const GeofenceMap = ({
     setNewPoint({
       lat: e.lat,
       lng: e.lng,
+    });
+  }
+
+  function onLatInputChange(lat: number) {
+    setNewPoint({
+      lat,
+      lng: newPoint ? newPoint.lng : 0
+    });
+  }
+
+  function onLngInputChange(lng: number) {
+    setNewPoint({
+      lat: newPoint ? newPoint.lat : 0,
+      lng
     });
   }
 
@@ -160,6 +194,8 @@ const GeofenceMap = ({
             onRemove={onRemovePoint}
             onHoverStart={onHoverStartPoint}
             onHoverEnd={onHoverEndPoint}
+            onLatChange={onLatInputChange}
+            onLngChange={onLngInputChange}
           />
         </Box>
       </ErrorBoundary>
