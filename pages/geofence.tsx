@@ -112,8 +112,8 @@ const Accuracy: NextPage = () => {
     // If the location buffer is full, remove the first entry and add a new one
     const newBuffer =
       locationBuffer.length === BUFFER_LENGTH
-        ? locationBuffer.slice(1, locationBuffer.length).concat([location])
-        : locationBuffer.concat([location]);
+        ? locationBuffer.slice(1, locationBuffer.length).concat(location)
+        : locationBuffer.concat(location);
 
     setLocationBuffer(newBuffer);
 
