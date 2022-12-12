@@ -4,15 +4,26 @@ import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Maybe } from "../../types/generic.types";
 import { Geofence } from "../../types/geofence.types";
-import type { GeoLocation, GeoLocationMeasured, MapMarker } from "../../types/location.types";
+import type {
+  GeoLocation,
+  GeoLocationId,
+  GeoLocationMeasured,
+  MapMarker,
+} from "../../types/location.types";
 import PointList from "./PointList";
 import Marker from "./Marker";
 import {
+  fenceActiveLocationColor,
   fenceLocationColor,
   fenceLocationHoverColor,
+  fencePathColor,
   userLocationColor,
 } from "../../styles/colors";
-import { findEntryPointGeofence, findExitPointGeofence, isPointInGeofence } from "../../utils/geofence";
+import {
+  findEntryPointGeofence,
+  findExitPointGeofence,
+  isPointInGeofence,
+} from "../../utils/geofence";
 
 const MapErrorFallback = () => {
   return <Heading>There has been an error, when loading the map.</Heading>;
@@ -21,6 +32,7 @@ const MapErrorFallback = () => {
 interface Props {
   // Location of the user
   userLocation: Maybe<GeoLocationMeasured>;
+  userPath: GeoLocationId[];
   // Geofence information {points: [], active: boolean}
   geofence: Geofence;
   userLocationBuffer: GeoLocation[];
@@ -33,6 +45,7 @@ interface Props {
 
 const GeofenceMap = ({
   userLocation,
+  userPath,
   geofence,
   userLocationBuffer,
   onAddPoint,
@@ -44,6 +57,8 @@ const GeofenceMap = ({
   const [userMarker, setUserMarker] = useState<Maybe<MapMarker>>(undefined);
   // Hold information about the polygon displayed on the map
   const [polygon, setPolygon] = useState<any>(undefined);
+  // Holds information about the path
+  const [path, setPath] = useState<any>(undefined);
   // New point to be added from the form
   const [newPoint, setNewPoint] = useState<Maybe<GeoLocation>>(undefined);
   // Objects for controlling the google map
@@ -58,22 +73,44 @@ const GeofenceMap = ({
       polygon.setMap(null);
     }
     if (googleMaps && geofence.points.length > 2) {
+      const color = geofence.active ? fenceActiveLocationColor : fenceLocationColor;
       const path = geofence.points
         .map((p) => ({ lat: p.lat, lng: p.lng }))
         .concat(geofence.points[0]);
       const poly = new googleMaps.maps.Polygon({
         paths: path,
-        strokeColor: fenceLocationColor,
+        strokeColor: color,
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: fenceLocationColor,
+        fillColor: color,
         fillOpacity: 0.35,
       });
       setPolygon(poly);
       poly.setMap(googleMaps.map);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [googleMaps, geofence.points]);
+  }, [googleMaps, geofence.points, geofence.active]);
+
+  // Rerender the polygon when it updates
+  useEffect(() => {
+    if (googleMaps && path) {
+      path.setMap(null);
+    }
+    if (googleMaps && userPath.length > 1) {
+      const path = userPath.map((p) => ({ lat: p.lat, lng: p.lng }));
+      const poly = new googleMaps.maps.Polyline({
+        path: path,
+        strokeColor: fencePathColor,
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: fencePathColor,
+        fillOpacity: 0.35,
+      });
+      setPath(poly);
+      poly.setMap(googleMaps.map);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleMaps, userPath]);
 
   // Default props for the map component
   const defaultProps = {
@@ -100,20 +137,20 @@ const GeofenceMap = ({
         accuracyCircle:
           userLocation.accuracy !== undefined
             ? new googleMaps.maps.Circle({
-              strokeColor: userLocationColor,
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: userLocationColor,
-              fillOpacity: 0.35,
-              map: googleMaps.map,
-              center: { lat: userLocation.lat, lng: userLocation.lng },
-              radius: userLocation.accuracy || 0.01,
-            })
+                strokeColor: userLocationColor,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: userLocationColor,
+                fillOpacity: 0.35,
+                map: googleMaps.map,
+                center: { lat: userLocation.lat, lng: userLocation.lng },
+                radius: userLocation.accuracy || 0.01,
+              })
             : undefined,
       });
 
       const userInGeofence = isPointInGeofence(userLocation, geofence.points);
-      
+
       // If the user has just entered the geofence
       if (userInGeofence && !geofence.active) {
         const entryPoint = findEntryPointGeofence(userLocationBuffer, geofence.points);
@@ -143,14 +180,14 @@ const GeofenceMap = ({
   function onLatInputChange(lat: number) {
     setNewPoint({
       lat,
-      lng: newPoint ? newPoint.lng : 0
+      lng: newPoint ? newPoint.lng : 0,
     });
   }
 
   function onLngInputChange(lng: number) {
     setNewPoint({
       lat: newPoint ? newPoint.lat : 0,
-      lng
+      lng,
     });
   }
 
@@ -179,25 +216,40 @@ const GeofenceMap = ({
               <Marker lat={newPoint.lat} lng={newPoint.lng} color={fenceLocationColor} />
             )}
             {geofence.points.map((g) => {
-              const color = g.hovered === true ? fenceLocationHoverColor : fenceLocationColor;
+              const color =
+                g.hovered === true
+                  ? fenceLocationHoverColor
+                  : geofence.active
+                  ? fenceActiveLocationColor
+                  : fenceLocationColor;
               const size = g.hovered === true ? "md" : "sm";
               return <Marker lat={g.lat} lng={g.lng} color={color} key={g.id} size={size} />;
             })}
+            {userPath.map((p: GeoLocationId, i: number) => {
+              if (i === 0 || i == userPath.length - 1) {
+                return (
+                  <Marker lat={p.lat} lng={p.lng} color={fencePathColor} key={p.id} size={"md"} />
+                );
+              }
+              return (
+                <Marker lat={p.lat} lng={p.lng} color={fencePathColor} key={p.id} size={"sm"} />
+              );
+            })}
           </GoogleMapReact>
-          <PointList
-            geofence={geofence.points}
-            newPoint={newPoint}
-            onAdd={() => {
-              onAddPoint(newPoint);
-              setNewPoint(undefined);
-            }}
-            onRemove={onRemovePoint}
-            onHoverStart={onHoverStartPoint}
-            onHoverEnd={onHoverEndPoint}
-            onLatChange={onLatInputChange}
-            onLngChange={onLngInputChange}
-          />
         </Box>
+        <PointList
+          geofence={geofence.points}
+          newPoint={newPoint}
+          onAdd={() => {
+            onAddPoint(newPoint);
+            setNewPoint(undefined);
+          }}
+          onRemove={onRemovePoint}
+          onHoverStart={onHoverStartPoint}
+          onHoverEnd={onHoverEndPoint}
+          onLatChange={onLatInputChange}
+          onLngChange={onLngInputChange}
+        />
       </ErrorBoundary>
     </>
   );
