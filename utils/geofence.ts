@@ -6,17 +6,20 @@ export function isPointInGeofence(location: GeoLocation, geopoints: GeofencePoin
   // TODO: Implement detecting if the user is in geofence
   if (geopoints.length < 3) return false;
 
-
   var a = false;
   var counter = 0;
 
   var j = geopoints.length - 1;
   for (var i = 0; i < geopoints.length; i++) {
-
     // console.log(geopoints[i], ((geopoints[i].lng > location.lng) != (geopoints[j].lng > location.lng)), (location.lat < (geopoints[j].lat - geopoints[i].lat) * (location.lng - geopoints[i].lng) / (geopoints[j].lng - geopoints[i].lng) + geopoints[i].lat));
 
-    if (((geopoints[i].lng > location.lng) != (geopoints[j].lng > location.lng)) &&
-      (location.lat < (geopoints[j].lat - geopoints[i].lat) * (location.lng - geopoints[i].lng) / (geopoints[j].lng - geopoints[i].lng) + geopoints[i].lat)) {
+    if (
+      geopoints[i].lng > location.lng != geopoints[j].lng > location.lng &&
+      location.lat <
+        ((geopoints[j].lat - geopoints[i].lat) * (location.lng - geopoints[i].lng)) /
+          (geopoints[j].lng - geopoints[i].lng) +
+          geopoints[i].lat
+    ) {
       a = !a;
       counter = counter + 1;
     }
@@ -28,7 +31,12 @@ export function isPointInGeofence(location: GeoLocation, geopoints: GeofencePoin
   return a;
 }
 
-export function calculateIntersection(p1: GeoLocation, p2: GeoLocation, p3: GeoLocation, p4: GeoLocation): Maybe<GeoLocation> {
+export function calculateIntersection(
+  p1: GeoLocation,
+  p2: GeoLocation,
+  p3: GeoLocation,
+  p4: GeoLocation,
+): Maybe<GeoLocation> {
   // console.log("p1, p2, p3, p4:", p1, p2, p3, p4);
 
   var c2x = p3.lng - p4.lng; // (x3 - x4)
@@ -58,42 +66,44 @@ export function calculateIntersection(p1: GeoLocation, p2: GeoLocation, p3: GeoL
 }
 
 export function isPointBetweenTwoPoints(point: GeoLocation, p1: GeoLocation, p2: GeoLocation) {
-  return ((point.lat >= p1.lat && point.lat <= p2.lat) || (point.lat <= p1.lat && point.lat >= p2.lat))
-    && ((point.lng >= p1.lng && point.lng <= p2.lng) || (point.lng <= p1.lng && point.lng >= p2.lng))
+  return (
+    ((point.lat >= p1.lat && point.lat <= p2.lat) ||
+      (point.lat <= p1.lat && point.lat >= p2.lat)) &&
+    ((point.lng >= p1.lng && point.lng <= p2.lng) || (point.lng <= p1.lng && point.lng >= p2.lng))
+  );
 }
 
 // Go through all lines in the geofence and if the user's path intersects with one of them, return that intersection point
-function findUserPathAndGeofenceIntersection(p1: GeoLocation, p2: GeoLocation, geofence: GeofencePoint[]): Maybe<GeoLocation> {
+function findUserPathAndGeofenceIntersection(
+  p1: GeoLocation,
+  p2: GeoLocation,
+  geofence: GeofencePoint[],
+): Maybe<GeoLocation> {
   for (let i1 = 0; i1 < geofence.length; i1++) {
-    const i2 = i1 + 1 % (geofence.length - 1)
+    const i2 = i1 + (1 % (geofence.length - 1));
     const gp1 = geofence[i1];
     const gp2 = geofence[i2];
     const itrsCandidate = calculateIntersection(p1, p2, gp1, gp2);
 
     // Only count the intersection points, which fall in between p1 and p2
-    if (itrsCandidate && isPointBetweenTwoPoints(itrsCandidate, p1, p2))
-      return itrsCandidate;
+    if (itrsCandidate && isPointBetweenTwoPoints(itrsCandidate, p1, p2)) return itrsCandidate;
   }
 
   return undefined;
 }
-
 
 // Find the geofence entry point, assuming that p2 is inside the geofence and p1 is not. In other words the user has just entered the geofence.
 export function findEntryPointGeofence(
   userPath: GeoLocation[],
   geopoints: GeofencePoint[],
 ): Maybe<GeoLocation> {
-  if (geopoints.length < 3 || userPath.length < 2)
-    return undefined;
+  if (geopoints.length < 3 || userPath.length < 2) return undefined;
 
-  // p1 and p2 are the latest points in the user's path. 
-  const p1 = userPath[userPath.length - 2];
-  const p2 = userPath[userPath.length - 1];
-
-  // It is assumed that p2 is inside the geofence and p1 is not.
-  if (isPointInGeofence(p1, geopoints) || !isPointInGeofence(p2, geopoints))
-    return undefined;
+  // p1 and p2 are the latest points in the user's path.
+  const indexEntry = userPath.findIndex((p) => isPointInGeofence(p, geopoints));
+  if (indexEntry === 0 || indexEntry === -1) return undefined;
+  const p2 = userPath[indexEntry];
+  const p1 = userPath[indexEntry - 1];
 
   const intersection = findUserPathAndGeofenceIntersection(p1, p2, geopoints);
 
@@ -104,16 +114,16 @@ export function findExitPointGeofence(
   userPath: GeoLocation[],
   geopoints: GeofencePoint[],
 ): Maybe<GeoLocation> {
-  if (geopoints.length < 3 || userPath.length < 2)
-    return undefined;
+  if (geopoints.length < 3 || userPath.length < 2) return undefined;
 
-  // p1 and p2 are the latest points in the user's path. 
-  const p1 = userPath[userPath.length - 2];
-  const p2 = userPath[userPath.length - 1];
+  // p1 and p2 are the latest points in the user's path.
+  const indexExit = userPath.findIndex((p) => !isPointInGeofence(p, geopoints));
+  if (indexExit === 0 || indexExit === -1) return undefined;
+  const p2 = userPath[indexExit];
+  const p1 = userPath[indexExit - 1];
 
   // It is assumed that p1 is inside the geofence and p2 is not. In other words the user has just entered the geofence.
-  if (!isPointInGeofence(p1, geopoints) || isPointInGeofence(p2, geopoints))
-    return undefined;
+  if (!isPointInGeofence(p1, geopoints) || isPointInGeofence(p2, geopoints)) return undefined;
 
   const intersection = findUserPathAndGeofenceIntersection(p1, p2, geopoints);
 
