@@ -231,9 +231,6 @@ const GeofenceMap = ({
                   <Marker lat={p.lat} lng={p.lng} color={fencePathColor} key={p.id} size={"md"} />
                 );
               }
-              return (
-                <Marker lat={p.lat} lng={p.lng} color={fencePathColor} key={p.id} size={"sm"} />
-              );
             })}
           </GoogleMapReact>
         </Box>
