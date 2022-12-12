@@ -100,10 +100,8 @@ export function findEntryPointGeofence(
   if (geopoints.length < 3 || userPath.length < 2) return undefined;
 
   // p1 and p2 are the latest points in the user's path.
-  const indexEntry = userPath.findIndex((p) => isPointInGeofence(p, geopoints));
-  if (indexEntry === 0 || indexEntry === -1) return undefined;
-  const p2 = userPath[indexEntry];
-  const p1 = userPath[indexEntry - 1];
+  const p1 = userPath[0];
+  const p2 = userPath[1];
 
   const intersection = findUserPathAndGeofenceIntersection(p1, p2, geopoints);
 
@@ -117,13 +115,8 @@ export function findExitPointGeofence(
   if (geopoints.length < 3 || userPath.length < 2) return undefined;
 
   // p1 and p2 are the latest points in the user's path.
-  const indexExit = userPath.findIndex((p) => !isPointInGeofence(p, geopoints));
-  if (indexExit === 0 || indexExit === -1) return undefined;
-  const p2 = userPath[indexExit];
-  const p1 = userPath[indexExit - 1];
-
-  // It is assumed that p1 is inside the geofence and p2 is not. In other words the user has just entered the geofence.
-  if (!isPointInGeofence(p1, geopoints) || isPointInGeofence(p2, geopoints)) return undefined;
+  const p1 = userPath[0];
+  const p2 = userPath[1];
 
   const intersection = findUserPathAndGeofenceIntersection(p1, p2, geopoints);
 

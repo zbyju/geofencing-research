@@ -13,7 +13,7 @@ import {
 } from "../utils/geofence";
 
 // Geolocation buffer length
-const BUFFER_LENGTH = 10;
+const BUFFER_LENGTH = 2;
 
 const Accuracy: NextPage = () => {
   // User location
@@ -107,18 +107,17 @@ const Accuracy: NextPage = () => {
 
   useEffect(() => {
     if (location === undefined) return;
-    console.log(location);
-
     // If the location buffer is full, remove the first entry and add a new one
     const newBuffer =
       locationBuffer.length === BUFFER_LENGTH
         ? locationBuffer.slice(1, locationBuffer.length).concat(location)
         : locationBuffer.concat(location);
 
+    console.log(newBuffer.map((p) => isPointInGeofence(p, geofence.points)));
+
     setLocationBuffer(newBuffer);
 
     const isUserIn = isPointInGeofence(location, geofence.points);
-    console.log(isUserIn);
     if (isUserIn && !geofence.active) {
       // User just entered
       const entry = findEntryPointGeofence(newBuffer, geofence.points);
@@ -126,19 +125,25 @@ const Accuracy: NextPage = () => {
         ...geofence,
         active: true,
         entryPoint: entry,
+        exitPoint: undefined,
       });
-      const newPath: GeoLocationId[] = ([] as GeoLocationId[]).concat([
-        { ...entry!, id: uuid() },
-        { ...location, id: uuid() },
-      ]);
+      let newPath: GeoLocationId[] = [];
+      if (entry !== undefined) {
+        newPath.push({ ...entry, id: uuid() });
+      }
+      newPath.push({ ...location, id: uuid() });
       setPath(newPath);
     } else if (!isUserIn && geofence.active) {
+      const exit = findExitPointGeofence(newBuffer, geofence.points);
       // Just exited
       setGeofence({
         ...geofence,
         active: false,
-        exitPoint: findExitPointGeofence(newBuffer, geofence.points),
+        exitPoint: exit,
       });
+      if (exit !== undefined) {
+        setPath(path.concat({ ...exit, id: uuid() }));
+      }
     } else if (isUserIn) {
       setPath(path.concat({ ...location, id: uuid() }));
     }
