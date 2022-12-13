@@ -169,15 +169,28 @@ describe("testGeofenceEntryPoint", () => {
   const p2: GeoLocation = { lat: 60.18471173797174, lng: 24.81929533910841 }; // Inside geofence1
   const userLocations = [p1, p2];
 
+  const p3: GeoLocation = { lat: 60.187515149160376, lng: 24.824442436222654 }; // Outside geofence1
+  const p4: GeoLocation = { lat: 60.187411136371615, lng: 24.824909140591245 }; // Inside geofence1
+  const userLocations2 = [p3, p4];
+
   test("returns a point that is between the user locations", () => {
     const entryPoint = findEntryPointGeofence(userLocations, geofence1);
     expect(entryPoint).toBeDefined();
+
+    const entryPoint2 = findEntryPointGeofence(userLocations2, geofence1);
+    expect(entryPoint2).toBeDefined();
 
     if (entryPoint) {
       const isBetweenUserLocations = isPointBetweenTwoPoints(entryPoint, p1, p2)
       expect(isBetweenUserLocations).toBe(true);
     }
+
+    if (entryPoint2) {
+      const isBetweenUserLocations = isPointBetweenTwoPoints(entryPoint2, p3, p4)
+      expect(isBetweenUserLocations).toBe(true);
+    }
     console.log("Entry point: ", entryPoint);
+    console.log("Entry point 2: ", entryPoint);
   });
 });
 

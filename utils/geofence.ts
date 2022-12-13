@@ -80,7 +80,7 @@ function findUserPathAndGeofenceIntersection(
   geofence: GeofencePoint[],
 ): Maybe<GeoLocation> {
   for (let i1 = 0; i1 < geofence.length; i1++) {
-    const i2 = i1 + (1 % (geofence.length - 1));
+    const i2 = (i1 + 1) % (geofence.length); // If i1 is geofence.length, i2 is 0
     const gp1 = geofence[i1];
     const gp2 = geofence[i2];
     const itrsCandidate = calculateIntersection(p1, p2, gp1, gp2);
