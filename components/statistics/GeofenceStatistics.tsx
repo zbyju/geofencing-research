@@ -14,6 +14,9 @@ const GeofenceStatistics = ({ userPath, times }: Props) => {
     time: calculateDuration(times),
   };
 
+  const entry = userPath.length > 0 ? userPath[0] : undefined;
+  const exit = userPath.length > 0 ? userPath[userPath.length - 1] : undefined;
+
   return (
     <Box my={3} shadow="md" w="100%" borderRadius="8px" overflow="hidden">
       <Heading px={5} py={2} size="md" bg="blue.100">
@@ -38,6 +41,22 @@ const GeofenceStatistics = ({ userPath, times }: Props) => {
           <StatNumber>
             {stats.time ? `${stats.time.toFixed(2)}s` : times.start ? "Inside" : "Unknown"}
           </StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel>Entry latitude</StatLabel>
+          <StatNumber>{entry !== undefined ? entry.lat : "Undefined"}</StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel>Entry longitude</StatLabel>
+          <StatNumber>{entry !== undefined ? entry.lng : "Undefined"}</StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel>Exit latitude</StatLabel>
+          <StatNumber>{exit !== undefined ? exit.lat : "Undefined"}</StatNumber>
+        </Stat>
+        <Stat>
+          <StatLabel>Exit longitude</StatLabel>
+          <StatNumber>{exit !== undefined ? exit.lng : "Undefined"}</StatNumber>
         </Stat>
       </Flex>
     </Box>
